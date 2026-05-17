@@ -12,6 +12,7 @@ Metaharness rules should not remain prose-only. Each rule family should be packa
 
 ## Skills
 
+- [`skills/minimum-floor-gate-harness`](../skills/minimum-floor-gate-harness/SKILL.md) — non-negotiable lower bound for every gated task, enforced during design and validation
 - [`skills/artifact-build-flow-harness`](../skills/artifact-build-flow-harness/SKILL.md) — shared layer for code-development and artifact-construction flows
 - [`skills/phase-risk-gate-harness`](../skills/phase-risk-gate-harness/SKILL.md) — selects different checks by lifecycle phase and risk
 - [`skills/portable-agent-adapter-harness`](../skills/portable-agent-adapter-harness/SKILL.md) — exposes the same gates to Claude Code, Codex, Hermes Agent, and other runtimes
@@ -37,6 +38,7 @@ The gate validates structural obligations for the declared risk tier. It intenti
 
 | Rule | Risk tier | Skill |
 | --- | --- | --- |
+| Minimum lower bound | All | minimum-floor-gate-harness |
 | Intent freeze | Low+ | low-risk-readonly-harness, medium-risk-change-harness, high-risk-side-effect-harness |
 | Evidence priority | Low+ | low-risk-readonly-harness |
 | Executor / validator separation | Medium+ | medium-risk-change-harness, high-risk-side-effect-harness |

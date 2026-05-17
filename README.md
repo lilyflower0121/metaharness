@@ -55,6 +55,7 @@ Harness rules should be packaged as skills with risk-appropriate validators, not
 
 Initial skills:
 
+- [`skills/minimum-floor-gate-harness`](skills/minimum-floor-gate-harness/SKILL.md) — non-negotiable lower-bound controls enforced at design and validation time
 - [`skills/artifact-build-flow-harness`](skills/artifact-build-flow-harness/SKILL.md) — shared flow for code development and artifact construction
 - [`skills/phase-risk-gate-harness`](skills/phase-risk-gate-harness/SKILL.md) — selects gates by lifecycle phase as well as risk tier
 - [`skills/portable-agent-adapter-harness`](skills/portable-agent-adapter-harness/SKILL.md) — keeps Claude Code, Codex, Hermes Agent, and other runtimes on the same executable gate contract
@@ -68,6 +69,7 @@ Each skill has its own `references/` and `scripts/` support files. Common artifa
 Run the structural gates directly with:
 
 ```bash
+python3 scripts/minimum_floor_gate.py --contract <contract.yaml>
 python3 scripts/metaharness_gate.py --risk <low|medium|high> --contract <contract.yaml>
 python3 scripts/phase_risk_gate.py --contract <contract.yaml>
 ```
@@ -78,7 +80,7 @@ For Claude Code, Codex, Hermes Agent, and other agent runtimes, prefer the porta
 python3 scripts/run_metaharness.py --contract <contract.yaml>
 ```
 
-See [`docs/risk-tiered-skills.md`](docs/risk-tiered-skills.md), [`docs/phase-risk-gates.md`](docs/phase-risk-gates.md), and [`docs/portable-agent-adapters.md`](docs/portable-agent-adapters.md).
+See [`docs/minimum-floor-gates.md`](docs/minimum-floor-gates.md), [`docs/risk-tiered-skills.md`](docs/risk-tiered-skills.md), [`docs/phase-risk-gates.md`](docs/phase-risk-gates.md), and [`docs/portable-agent-adapters.md`](docs/portable-agent-adapters.md).
 
 ## Status
 

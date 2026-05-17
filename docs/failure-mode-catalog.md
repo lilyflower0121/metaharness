@@ -20,6 +20,23 @@ External reference families used as pattern sources:
 - SLSA / supply-chain guidance: provenance, dependency integrity, build/release separation.
 - OWASP ASVS-style verification: explicit controls and testable requirements rather than intent-only security claims.
 
+## Minimum floor
+
+Some failures sit below risk/phase selection and must be blocked in both design and validation stages. See `docs/minimum-floor-gates.md` and `skills/minimum-floor-gate-harness`.
+
+Minimum-floor families:
+
+- MF-001 Objective integrity
+- MF-002 Authority for side effects
+- MF-003 Data and secret boundary
+- MF-004 Untrusted input boundary
+- MF-005 Allowed surface
+- MF-006 Evidence over assertion
+- MF-007 Stop/rollback
+- MF-008 Independent validation threshold
+- MF-009 Supply-chain baseline
+- MF-010 Retention boundary
+
 ## Canonical failure modes
 
 | ID | Failure mode | Typical phase | Risk | Gate family |

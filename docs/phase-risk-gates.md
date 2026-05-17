@@ -35,16 +35,18 @@ This avoids slowing every task with the heaviest gate while still blocking high-
 
 ## Minimality rule
 
-A gate should be just strong enough for the risk and phase:
+A gate should be just strong enough for the risk and phase, but it may never bypass the minimum floor in `docs/minimum-floor-gates.md`.
 
 - Do not require merge-grade checks during early MVP exploration.
 - Do not let MVP exploration perform release-grade side effects.
 - Do not let implementation proceed with a vague spec if the next phase is merge or release.
 - Do not skip read-back verification after publication because tests passed locally.
+- Do not accept any phase/risk shortcut that omits authority, data boundary, allowed surface, evidence, stop/rollback, validator, supply-chain, or retention lower-bound controls.
 
 ## Executable gate
 
 ```bash
+python3 scripts/minimum_floor_gate.py --contract <contract.yaml>
 python3 scripts/phase_risk_gate.py --contract <contract.yaml>
 ```
 

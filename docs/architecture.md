@@ -90,6 +90,8 @@ For code-development or artifact-construction work, the shared `artifact-build-f
 
 For lifecycle control, `phase-risk-gate-harness` chooses different gates for exploration, MVP exploration, specification, implementation, merge, release, operate, and retention. This keeps early discovery fast while making merge/release/operation gates stricter.
 
+Below every phase/risk gate, `minimum-floor-gate-harness` enforces non-negotiable design and validation controls: objective integrity, authority boundaries, data/secret boundaries, untrusted input handling, allowed surfaces, evidence, stop/rollback, independent validation threshold, supply-chain boundary, and retention classification. This lower bound is placed in the contract so violations are caught before implementation, not only at final review.
+
 For runtime portability, `portable-agent-adapter-harness` keeps Claude Code, Codex, Hermes Agent, and other agents on the same shared command surface. Runtime files such as `CLAUDE.md`, `AGENTS.md`, and Hermes `SKILL.md` are adapters; they must point back to the shared contract and scripts rather than becoming separate policy sources.
 
 ## Layer 5: Validator Compilation Layer
@@ -106,9 +108,10 @@ Examples:
 
 Natural-language rules should be compiled into executable tests, static checks, policy gates, or manual review checklists.
 
-Metaharness starts with risk-tiered skills and a structural gate:
+Metaharness starts with a minimum-floor gate plus risk-tiered skills and structural gates:
 
 ```bash
+python3 scripts/minimum_floor_gate.py --contract <contract.yaml>
 python3 scripts/metaharness_gate.py --risk <low|medium|high> --contract <contract.yaml>
 ```
 

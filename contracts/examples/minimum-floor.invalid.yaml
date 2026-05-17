@@ -1,0 +1,20 @@
+phase: implementation
+risk_tier: medium
+objective: Build something vaguely useful.
+non_goals:
+  - TBD
+prohibited_substitutions:
+  - none
+constraints:
+  external_side_effect_policy: TBD
+  data_classification: unknown
+minimum_floor:
+  design_controls:
+    objective_integrity: TBD
+    authority_boundary: none
+  validation_controls:
+    evidence_receipt: none
+validation:
+  validator_role: executor self-certifies
+stop_conditions:
+  - none
