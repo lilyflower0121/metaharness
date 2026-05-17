@@ -1,0 +1,125 @@
+phase: merge
+risk_tier: medium
+objective: Publish a human-reviewable IO bundle for a passed metaharness gate receipt.
+non_goals:
+  - Do not publish secrets, private data, raw private logs, or unrestricted terminal dumps.
+  - Do not make private repository evidence public.
+prohibited_substitutions:
+  - Do not treat a pretty HTML page as a validation result.
+  - Do not publish failed gates as passed gates.
+constraints:
+  external_side_effect_policy: public static IO may be generated only from public-safe contract fields and sanitized receipts
+  data_classification: public
+  allowed_paths:
+    - docs/
+    - io/
+    - scripts/
+    - contracts/examples/
+  allowed_tools:
+    - python3
+    - git
+lower_bound:
+  design_controls:
+    objective_integrity: publish gate receipts for human review, not as a substitute for gate execution
+    authority_boundary: publishing public IO requires maintainer request and public-safe source material
+    data_boundary: public IO includes only public-safe contract metadata and sanitized validator output
+    untrusted_input_boundary: receipt and contract are rendered as escaped text, never executable HTML or script
+    allowed_surface: renderer writes only to the requested output directory
+    evidence_lower_bound: IO page must include receipt schema, gate status, validator list, and contract path
+    stop_or_rollback: stop if receipt is not pass or publication safety checks fail; rollback by deleting generated site or reverting commit
+    validator_boundary: scripts/render_io.py checks receipt and IO publication policy before writing pages
+    supply_chain_boundary: "not_applicable: renderer uses Python standard library and local repository files only"
+    retention_boundary: retain sanitized receipt and static HTML only; discard raw private logs and secrets
+  validation_controls:
+    evidence_receipt: run_metaharness JSON receipt and rendered index.html
+    side_effect_readback: generated local files are inspected before external publication
+    secret_or_private_data_check: renderer scans serialized publication material for common secret markers
+    changed_surface_check: git status and output directory listing confirm bounded changes
+    validator_result: run_metaharness and render_io exit code recorded
+    rollback_or_irreversibility_result: generated files can be deleted or reverted before publication
+    retention_result: IO bundle stores sanitized HTML and JSON receipt only
+authority:
+  requested_by: repository maintainer or task owner
+  approved_actions:
+    - generate and optionally publish sanitized IO pages to the configured visibility-matched host
+  ambiguous_scope_owner: requester
+io_publication:
+  visibility: public
+  audience:
+    - maintainers
+    - reviewers
+    - external readers
+  publish_target: static site or GitHub Pages repository with matching visibility
+  include:
+    - gate_summary
+    - validator_outputs
+    - evidence_pointers
+    - residual_risks
+  redact:
+    - secrets
+    - private_data
+    - absolute_local_paths
+  human_review:
+    required: true
+    reviewer_role: maintainer_or_authorized_reviewer
+artifact_flow:
+  artifact_type: static_review_site
+  target_users:
+    - maintainers
+    - reviewers
+  deliverables:
+    - docs/io-publishing.md
+    - scripts/render_io.py
+    - generated index.html
+  build_steps:
+    - run metaharness gate suite with JSON receipt output
+    - render sanitized static IO bundle
+    - inspect generated files before publication
+  validators:
+    - scripts/metaharness_gate.py
+    - scripts/run_metaharness.py
+    - scripts/render_io.py
+    - secret content scan
+  acceptance_receipt:
+    - rendered index.html exists
+    - receipt.json exists
+    - public/private visibility stated
+phase_controls:
+  independent_validation:
+    - run_metaharness suite checks LB, risk, phase, and artifact gates
+  receipt_path: /tmp/metaharness-io-receipt.json and generated IO bundle
+  clean_status_check: git status --short reviewed before commit
+  merge_readiness:
+    - IO publication policy documented
+    - renderer has positive and negative smoke checks
+  review_evidence:
+    - generated HTML is read back locally
+    - GitHub read-back verifies committed files
+validation:
+  validator_role: independent gate runner plus human reviewer of IO page
+  success_criteria:
+    - run_metaharness passes
+    - render_io generates index.html and sanitized JSON files
+    - generated IO contains no secret-like markers
+  automated_checks:
+    - python3 scripts/run_metaharness.py --contract contracts/examples/io-publication.public.valid.yaml
+    - python3 scripts/render_io.py --contract contracts/examples/io-publication.public.valid.yaml --receipt receipt.json --out /tmp/metaharness-io
+  checks:
+    - python3 scripts/run_metaharness.py --contract contracts/examples/io-publication.public.valid.yaml
+    - python3 scripts/render_io.py --contract contracts/examples/io-publication.public.valid.yaml --receipt receipt.json --out /tmp/metaharness-io
+  receipt_required: true
+evidence_policy:
+  required_sources:
+    - contract path
+    - JSON gate receipt
+    - rendered static page
+  weak_sources:
+    - narrative summary without receipt JSON
+stop_conditions:
+  - receipt status is not pass
+  - io_publication visibility is missing
+  - public output contains private data, secrets, or absolute local paths
+rollback:
+  rollback_path: delete generated IO directory or revert publication commit
+retention:
+  decision: retain sanitized IO bundle and receipt as review artifact; do not retain raw private logs

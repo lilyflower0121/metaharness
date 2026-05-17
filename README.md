@@ -23,6 +23,7 @@ Metaharness is **not** a prompt dump. It is an architecture for binding agent ex
 ```text
 metaharness/
   adapters/    Thin runtime adapters for Claude Code, Codex, Hermes Agent
+  io/          Static IO publishing templates for human-reviewable gate receipts
   principles/   Human-readable design principles
   contracts/    Machine-readable schemas and task packets
   rules/        Normative harness rules
@@ -80,7 +81,7 @@ For Claude Code, Codex, Hermes Agent, and other agent runtimes, prefer the porta
 python3 scripts/run_metaharness.py --contract <contract.yaml>
 ```
 
-See [`docs/lower-bound-gates.md`](docs/lower-bound-gates.md), [`docs/risk-tiered-skills.md`](docs/risk-tiered-skills.md), [`docs/phase-risk-gates.md`](docs/phase-risk-gates.md), and [`docs/portable-agent-adapters.md`](docs/portable-agent-adapters.md).
+See [`docs/lower-bound-gates.md`](docs/lower-bound-gates.md), [`docs/risk-tiered-skills.md`](docs/risk-tiered-skills.md), [`docs/phase-risk-gates.md`](docs/phase-risk-gates.md), [`docs/portable-agent-adapters.md`](docs/portable-agent-adapters.md), and [`docs/io-publishing.md`](docs/io-publishing.md).
 
 ## Status
 

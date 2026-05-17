@@ -1,0 +1,60 @@
+phase: merge
+risk_tier: medium
+objective: Publish a human-reviewable IO bundle.
+non_goals:
+  - Do not leak secrets.
+prohibited_substitutions:
+  - Do not publish failed gates as passed gates.
+constraints:
+  external_side_effect_policy: public static IO may be generated
+  data_classification: private
+  allowed_paths:
+    - docs/
+  allowed_tools:
+    - python3
+lower_bound:
+  design_controls:
+    objective_integrity: publish gate receipts for human review
+    authority_boundary: public publishing is requested
+    data_boundary: private data is present but public output is requested
+    untrusted_input_boundary: escape renderer input
+    allowed_surface: bounded output directory
+    evidence_lower_bound: receipt required
+    stop_or_rollback: stop on leak
+    validator_boundary: renderer validates policy
+    supply_chain_boundary: "not_applicable: local renderer only"
+    retention_boundary: retain sanitized output only
+  validation_controls:
+    evidence_receipt: receipt required
+    side_effect_readback: local readback
+    secret_or_private_data_check: scan output
+    changed_surface_check: bounded output
+    validator_result: renderer result
+    rollback_or_irreversibility_result: delete output
+    retention_result: sanitized output
+io_publication:
+  visibility: public
+  audience:
+    - external readers
+  publish_target: public Pages
+  include:
+    - gate_summary
+  redact:
+    - secrets
+  human_review:
+    required: true
+    reviewer_role: maintainer
+validation:
+  validator_role: independent gate runner
+  checks:
+    - python3 scripts/render_io.py
+  receipt_required: true
+evidence_policy:
+  required_sources:
+    - receipt
+stop_conditions:
+  - public output contains private data
+rollback:
+  rollback_path: delete generated site
+retention:
+  decision: retain sanitized IO only

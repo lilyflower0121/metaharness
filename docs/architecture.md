@@ -92,6 +92,8 @@ For lifecycle control, `phase-risk-gate-harness` chooses different gates for exp
 
 Below every phase/risk gate, `lower-bound-gate-harness` enforces non-negotiable design and validation controls: objective integrity, authority boundaries, data/secret boundaries, untrusted input handling, allowed surfaces, evidence, stop/rollback, independent validation threshold, supply-chain boundary, and retention classification. This lower bound is placed in the contract so violations are caught before implementation, not only at final review.
 
+For human review and publication, `io_publication` contracts plus `scripts/render_io.py` create static IO bundles from passed gate receipts. The IO layer publishes what was checked and why a gate passed, while visibility remains controlled by the target host: public Pages for public material, private/internal repos or artifacts for private material.
+
 For runtime portability, `portable-agent-adapter-harness` keeps Claude Code, Codex, Hermes Agent, and other agents on the same shared command surface. Runtime files such as `CLAUDE.md`, `AGENTS.md`, and Hermes `SKILL.md` are adapters; they must point back to the shared contract and scripts rather than becoming separate policy sources.
 
 ## Layer 5: Validator Compilation Layer

@@ -1,0 +1,49 @@
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: https://metaharness.dev/schemas/io-publication.schema.yaml
+title: Metaharness IO Publication Contract
+$type: object
+required:
+  - io_publication
+properties:
+  io_publication:
+    type: object
+    required:
+      - visibility
+      - audience
+      - publish_target
+      - include
+      - redact
+      - human_review
+    properties:
+      visibility:
+        type: string
+        enum: [public, private, internal]
+      audience:
+        type: array
+        minItems: 1
+        items:
+          type: string
+      publish_target:
+        type: string
+        minLength: 3
+      include:
+        type: array
+        minItems: 1
+        items:
+          type: string
+          enum: [gate_summary, validator_outputs, evidence_pointers, residual_risks, receipt_json, contract_summary]
+      redact:
+        type: array
+        items:
+          type: string
+          enum: [secrets, private_data, absolute_local_paths, raw_logs, credentials]
+      human_review:
+        type: object
+        required: [required, reviewer_role]
+        properties:
+          required:
+            type: boolean
+          reviewer_role:
+            type: string
+            minLength: 3
+additionalProperties: true
