@@ -49,7 +49,7 @@ def main() -> int:
 
     rel = str(contract.relative_to(ROOT)) if contract.is_relative_to(ROOT) else str(contract)
     commands = [
-        [sys.executable, "scripts/minimum_floor_gate.py", "--contract", rel],
+        [sys.executable, "scripts/lb_gate.py", "--contract", rel],
         [sys.executable, "scripts/metaharness_gate.py", "--risk", risk, "--contract", rel],
         [sys.executable, "scripts/phase_risk_gate.py", "--contract", rel],
     ]

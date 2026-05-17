@@ -8,7 +8,7 @@ prohibited_substitutions:
 constraints:
   external_side_effect_policy: TBD
   data_classification: unknown
-minimum_floor:
+lower_bound:
   design_controls:
     objective_integrity: TBD
     authority_boundary: none

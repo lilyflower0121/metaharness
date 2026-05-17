@@ -20,22 +20,22 @@ External reference families used as pattern sources:
 - SLSA / supply-chain guidance: provenance, dependency integrity, build/release separation.
 - OWASP ASVS-style verification: explicit controls and testable requirements rather than intent-only security claims.
 
-## Minimum floor
+## Lower-bound (LB)
 
-Some failures sit below risk/phase selection and must be blocked in both design and validation stages. See `docs/minimum-floor-gates.md` and `skills/minimum-floor-gate-harness`.
+Some failures sit below risk/phase selection and must be blocked in both design and validation stages. See `docs/lower-bound-gates.md` and `skills/lower-bound-gate-harness`.
 
-Minimum-floor families:
+Lower-bound (LB) families:
 
-- MF-001 Objective integrity
-- MF-002 Authority for side effects
-- MF-003 Data and secret boundary
-- MF-004 Untrusted input boundary
-- MF-005 Allowed surface
-- MF-006 Evidence over assertion
-- MF-007 Stop/rollback
-- MF-008 Independent validation threshold
-- MF-009 Supply-chain baseline
-- MF-010 Retention boundary
+- LB-001 Objective integrity
+- LB-002 Authority for side effects
+- LB-003 Data and secret boundary
+- LB-004 Untrusted input boundary
+- LB-005 Allowed surface
+- LB-006 Evidence over assertion
+- LB-007 Stop/rollback
+- LB-008 Independent validation threshold
+- LB-009 Supply-chain baseline
+- LB-010 Retention boundary
 
 ## Canonical failure modes
 
