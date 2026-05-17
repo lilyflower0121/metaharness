@@ -1,0 +1,40 @@
+risk_tier: high
+objective: Publish a bounded public repository update after authorization.
+non_goals:
+  - Do not change credentials or repository permissions.
+prohibited_substitutions:
+  - Do not treat a successful push as read-back verification.
+constraints:
+  allowed_paths:
+    - docs/
+    - skills/
+    - scripts/
+  allowed_tools:
+    - git
+    - gh
+  external_side_effect_policy: push to named public repository only
+  data_classification: public
+evidence_policy:
+  required_sources:
+    - git diff
+    - secret scan
+    - GitHub read-back
+validation:
+  automated_checks:
+    - python3 scripts/metaharness_gate.py --risk high --contract contracts/examples/high-risk-side-effect.valid.yaml
+  manual_checks:
+    - Confirm target repository and branch.
+  validator_role: independent validator or codegate
+  success_criteria:
+    - GitHub main commit read-back matches local HEAD.
+authority:
+  requested_by: repository owner or authorized maintainer
+  approved_actions:
+    - push current commit to the named repository main branch
+  ambiguous_scope_owner: requester
+rollback:
+  rollback_path: git revert the pushed commit and push the revert
+  irreversible_actions: []
+stop_conditions:
+  - Authority is unclear.
+  - Secret scan fails.

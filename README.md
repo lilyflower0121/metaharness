@@ -46,6 +46,25 @@ The initial architecture is organized as seven layers:
 
 See [`docs/architecture.md`](docs/architecture.md).
 
+## Risk-tiered skills and gates
+
+Harness rules should be packaged as skills with risk-appropriate validators, not only prose to read and understand.
+
+Initial skills:
+
+- [`skills/low-risk-readonly-harness`](skills/low-risk-readonly-harness/SKILL.md)
+- [`skills/medium-risk-change-harness`](skills/medium-risk-change-harness/SKILL.md)
+- [`skills/high-risk-side-effect-harness`](skills/high-risk-side-effect-harness/SKILL.md)
+- [`skills/validator-gate-authoring`](skills/validator-gate-authoring/SKILL.md)
+
+Run the structural gate with:
+
+```bash
+python3 scripts/metaharness_gate.py --risk <low|medium|high> --contract <contract.yaml>
+```
+
+See [`docs/risk-tiered-skills.md`](docs/risk-tiered-skills.md).
+
 ## Status
 
 Early public scaffold. Interfaces and schema names may change until the first tagged release.

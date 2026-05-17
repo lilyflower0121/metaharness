@@ -1,0 +1,10 @@
+risk_tier: high
+objective: Publish something.
+non_goals: []
+constraints:
+  external_side_effect_policy: external publishing allowed
+evidence_policy:
+  required_sources: []
+validation:
+  success_criteria: []
+stop_conditions: []

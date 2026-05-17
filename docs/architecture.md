@@ -100,6 +100,14 @@ Examples:
 
 Natural-language rules should be compiled into executable tests, static checks, policy gates, or manual review checklists.
 
+Metaharness starts with risk-tiered skills and a structural gate:
+
+```bash
+python3 scripts/metaharness_gate.py --risk <low|medium|high> --contract <contract.yaml>
+```
+
+A task should not pass a gate merely because the agent read or summarized the rule; the relevant skill should name the validator that must pass for that risk tier.
+
 ## Layer 6: Receipt & Audit Layer
 
 A run is not complete until it leaves a reviewable receipt.

@@ -1,0 +1,14 @@
+risk_tier: low
+objective: Summarize repository architecture without changing files.
+non_goals:
+  - Do not edit files.
+constraints:
+  external_side_effect_policy: none
+evidence_policy:
+  required_sources:
+    - README.md
+validation:
+  success_criteria:
+    - Summary cites inspected files.
+stop_conditions:
+  - Required files are missing.

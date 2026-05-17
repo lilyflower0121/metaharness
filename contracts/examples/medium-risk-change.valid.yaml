@@ -1,0 +1,31 @@
+risk_tier: medium
+objective: Add documentation for a repository-local harness rule.
+non_goals:
+  - Do not publish a release.
+prohibited_substitutions:
+  - Do not replace validation with prose-only guidance.
+constraints:
+  allowed_paths:
+    - docs/
+    - rules/
+    - contracts/
+  allowed_tools:
+    - write_file
+    - terminal
+  external_side_effect_policy: git push allowed after checks
+  data_classification: public
+evidence_policy:
+  required_sources:
+    - existing docs
+validation:
+  automated_checks:
+    - python3 scripts/metaharness_gate.py --risk medium --contract contracts/examples/medium-risk-change.valid.yaml
+  manual_checks:
+    - Review changed files against objective and non-goals.
+  validator_role: independent reviewer or codegate
+  success_criteria:
+    - Gate passes.
+rollback:
+  rollback_path: git revert the commit
+stop_conditions:
+  - Secret scan fails.
