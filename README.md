@@ -25,7 +25,7 @@ metaharness/
   adapters/    Thin runtime adapters for Claude Code, Codex, Hermes Agent
   io/          Static IO publishing templates for human-reviewable gate receipts
   principles/   Human-readable design principles
-  contracts/    Machine-readable schemas and task packets
+  contracts/    Machine-readable schemas, task packets, and commit receipts
   rules/        Normative harness rules
   patterns/     Reusable task pipeline patterns
   checklists/   Preflight, validation, security, release checks
@@ -73,6 +73,7 @@ Run the structural gates directly with:
 python3 scripts/lb_gate.py --contract <contract.yaml>
 python3 scripts/metaharness_gate.py --risk <low|medium|high> --contract <contract.yaml>
 python3 scripts/phase_risk_gate.py --contract <contract.yaml>
+python3 scripts/commit_scope_audit.py --base main --head HEAD --json
 ```
 
 For Claude Code, Codex, Hermes Agent, and other agent runtimes, prefer the portable suite entrypoint:
@@ -81,7 +82,7 @@ For Claude Code, Codex, Hermes Agent, and other agent runtimes, prefer the porta
 python3 scripts/run_metaharness.py --contract <contract.yaml>
 ```
 
-See [`docs/lower-bound-gates.md`](docs/lower-bound-gates.md), [`docs/risk-tiered-skills.md`](docs/risk-tiered-skills.md), [`docs/phase-risk-gates.md`](docs/phase-risk-gates.md), [`docs/portable-agent-adapters.md`](docs/portable-agent-adapters.md), and [`docs/io-publishing.md`](docs/io-publishing.md).
+See [`docs/lower-bound-gates.md`](docs/lower-bound-gates.md), [`docs/risk-tiered-skills.md`](docs/risk-tiered-skills.md), [`docs/phase-risk-gates.md`](docs/phase-risk-gates.md), [`docs/portable-agent-adapters.md`](docs/portable-agent-adapters.md), [`docs/commit-scoped-agent-delegation.md`](docs/commit-scoped-agent-delegation.md), and [`docs/io-publishing.md`](docs/io-publishing.md).
 
 ## Status
 

@@ -57,6 +57,23 @@ Lower-bound (LB) families:
 | FM-014 | Skipping tests/checks before merge | merge | medium+ | merge readiness gate |
 | FM-015 | Unattended automation without stop rules | operate | high | operations gate |
 | FM-016 | Retention bloat or stale always-loaded rules | operate, retention | medium | retention classification gate |
+| FM-017 | Small-commit safety illusion | implementation, merge | medium+ | commit receipt + PR aggregate gate |
+| FM-018 | Risk laundering by split commits | implementation, merge | high when sensitive | cumulative branch risk gate |
+| FM-019 | Test weakening hidden in agent commit | implementation, merge | medium+ | test-weakening detector + independent tester |
+| FM-020 | Receipt/hash drift after rebase or squash | merge | medium+ | commit/tree/parent receipt integrity gate |
+| FM-021 | Gate-policy tampering by the builder | implementation, merge | high | independent gate-policy review |
+
+## Commit-scoped delegation anti-patterns
+
+Commit-scoped audit is a useful review-load reducer, but only if it is treated as a checkpoint layer inside a branch/PR assurance system.
+
+- **Small commits are not safety guarantees.** A one-line change can affect auth, billing, deletion, migration, CI/CD, or deployment behavior.
+- **Split commits can launder risk.** Recompute risk cumulatively at branch/PR level and inspect the final whole diff.
+- **Passing tests can be verifier weakening.** Treat test deletion, assertion removal, `skip`/`xfail`, broad mocks, and snapshot churn as blockers or human-review triggers.
+- **Receipts can drift.** Bind receipts to commit, tree, and parent hashes; revalidate after rebase, squash, amend, or force-push.
+- **Gate changes are high risk.** Scripts, schemas, policies, skills, adapters, and rules that classify work must not be self-approved by the same builder.
+
+See `docs/commit-scoped-agent-delegation.md`.
 
 ## Phase principle
 
