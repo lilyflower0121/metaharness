@@ -1,0 +1,64 @@
+phase: implementation
+risk_tier: medium
+objective: Invalid fixture for repository adoption gate.
+non_goals:
+  - Do not treat this as a valid adoption packet.
+prohibited_substitutions:
+  - Full-repository vendoring.
+constraints:
+  allowed_paths:
+    - docs/
+  allowed_tools:
+    - terminal
+  external_side_effect_policy: none
+  data_classification: public
+evidence_policy:
+  required_sources:
+    - docs/repository-adoption.md
+validation:
+  validator_role: adoption gate
+  success_criteria:
+    - This fixture must fail scripts/adoption_gate.py.
+stop_conditions:
+  - Adoption gate unexpectedly passes.
+lower_bound:
+  design_controls:
+    objective_integrity: invalid fixture only
+    authority_boundary: no external side effects
+    data_boundary: public invalid example
+    untrusted_input_boundary: example must not become policy
+    allowed_surface: contracts/examples only
+    evidence_lower_bound: docs/repository-adoption.md
+    stop_or_rollback: delete or revert fixture
+    validator_boundary: scripts/adoption_gate.py must fail this fixture
+    supply_chain_boundary: "not_applicable: no dependencies changed"
+    retention_boundary: retained only as negative fixture
+  validation_controls:
+    evidence_receipt: expected failure output from adoption gate
+    side_effect_readback: no side effects
+    secret_or_private_data_check: public fixture only
+    changed_surface_check: git diff/status review
+    validator_result: python3 scripts/adoption_gate.py --contract contracts/examples/repository-adoption.invalid.yaml fails
+    rollback_or_irreversibility_result: git revert the fixture
+    retention_result: negative fixture only
+phase_controls:
+  changed_surfaces:
+    - contracts/examples/
+  validators:
+    - python3 scripts/adoption_gate.py --contract contracts/examples/repository-adoption.invalid.yaml
+  rollback_path: git revert the fixture
+metaharness_adoption:
+  source_version: current
+  target_repo: example target repo
+  adoption_goal: incorrectly copy the full metaharness repository
+  adopted:
+    - source: full metaharness repository
+      class: copy_as_is
+      target: vendor/metaharness
+      local_decision: copied wholesale instead of selecting minimal enforceable artifacts
+  skipped: not-a-list
+  local_policy_sources:
+    - AGENTS.md
+  validators:
+    - no gate command here
+  update_policy: TBD

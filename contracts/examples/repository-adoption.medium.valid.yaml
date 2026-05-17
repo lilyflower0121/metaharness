@@ -1,0 +1,130 @@
+phase: implementation
+risk_tier: medium
+objective: Clarify how target repositories should adopt metaharness by distinguishing copyable artifacts from patterns that require repo-specific interpretation.
+non_goals:
+  - Do not require every repository to vendor or mirror all of metaharness.
+  - Do not weaken existing target-repo policies by replacing them with metaharness defaults.
+  - Do not add runtime-specific adoption code or network-dependent tooling.
+  - Do not publish or push changes unless separately authorized.
+prohibited_substitutions:
+  - A blanket instruction to copy the full repository into target repos.
+  - A prose-only warning that is not linked from agent entrypoints.
+  - Treating examples as production contracts without target-specific rewriting.
+constraints:
+  allowed_paths:
+    - README.md
+    - AGENTS.md
+    - .agent/RESOLVER.md
+    - docs/
+    - checklists/
+    - contracts/
+    - scripts/
+  allowed_tools:
+    - read_file
+    - search_files
+    - write_file
+    - patch
+    - terminal
+  external_side_effect_policy: repository/local changes only; no external publish or push in this contract
+  data_classification: public
+  public_repo_policy: generalized guidance only; no private target-repo details
+  cost_budget: local-only, no paid services
+  time_budget: bounded same-session documentation and schema update
+lower_bound:
+  design_controls:
+    objective_integrity: request is to make common metaharness adoption semantics clear to agents, especially copy versus interpretation boundaries
+    authority_boundary: local metaharness documentation/schema/checklist edits and local git commit are allowed; external push requires separate authorization
+    data_boundary: public-safe generalized adoption guidance; no secrets, private paths, target customer data, or internal repo examples
+    untrusted_input_boundary: examples are illustrative evidence only and must not become accepted target-repo policy without local review
+    allowed_surface: changes limited to README.md, AGENTS.md, .agent/RESOLVER.md, docs/, checklists/, contracts/, and scripts/
+    evidence_lower_bound: implementation reads current repo overview, resolver, architecture, and existing gate contract structure
+    stop_or_rollback: reversible by git revert or by discarding local changes before commit
+    validator_boundary: run shared metaharness validators for this contract and inspect public-safe changed text
+    supply_chain_boundary: "not_applicable: no dependencies, packages, CI, releases, lockfiles, or provenance tooling are changed"
+    retention_boundary: retain as public repository adoption docs/schema/checklist; do not store one-off session details as memory
+  validation_controls:
+    evidence_receipt: final response lists changed files, validation commands, commit and push status if applicable
+    side_effect_readback: git status/log read-back after commit and push only if separately authorized
+    secret_or_private_data_check: scan changed files for obvious secrets/private paths before completion
+    changed_surface_check: review git diff/status before commit
+    validator_result: python3 scripts/run_metaharness.py --contract contracts/examples/repository-adoption.medium.valid.yaml passes
+    rollback_or_irreversibility_result: git revert the resulting commit; no irreversible actions in this contract
+    retention_result: retained as public metaharness adoption guidance, not runtime code or global memory
+evidence_policy:
+  required_sources:
+    - README.md
+    - AGENTS.md
+    - .agent/RESOLVER.md
+    - docs/architecture.md
+    - scripts/run_metaharness.py
+  allowed_context:
+    - docs/activity-feedback-capture.md
+    - checklists/activity-feedback-capture.md
+validation:
+  automated_checks:
+    - python3 scripts/run_metaharness.py --contract contracts/examples/repository-adoption.medium.valid.yaml
+    - python3 scripts/adoption_gate.py --contract contracts/examples/repository-adoption.medium.valid.yaml
+    - "python3 - <<'PY'\nfrom pathlib import Path\nfor p in ['docs/repository-adoption.md','checklists/repository-adoption.md','contracts/metaharness-adoption.schema.yaml','scripts/adoption_gate.py']:\n    assert Path(p).exists(), p\nprint('repository adoption files present')\nPY"
+  manual_checks:
+    - Confirm README and resolver tell agents that metaharness is a reference harness, not a repo to copy wholesale.
+    - Confirm adoption classes distinguish copy_as_is, copy_then_configure, adapt_policy, interpret_pattern, reference_only, and skip.
+    - Confirm target repos are instructed to preserve existing stronger local policy.
+  validator_role: independent reviewer or codegate
+  success_criteria:
+    - Shared validator suite passes.
+    - Agents can find adoption guidance from README, AGENTS.md, and .agent/RESOLVER.md.
+    - Docs specify which artifacts are efficient to copy versus interpret.
+authority:
+  requested_by: hrt
+  approved_actions:
+    - update local metaharness repository files
+    - create a local git commit after checks pass
+  ambiguous_scope_owner: hrt
+rollback:
+  rollback_path: git revert the resulting local commit
+  irreversible_actions: []
+stop_conditions:
+  - Shared validator suite fails and cannot be fixed within allowed surfaces.
+  - Guidance would imply full-repo vendoring is mandatory.
+  - Guidance would let examples override target-repo policy without local review.
+  - Implementation would require private target-repo details or runtime-specific code.
+phase_controls:
+  changed_surfaces:
+    - README.md
+    - AGENTS.md
+    - .agent/RESOLVER.md
+    - docs/
+    - checklists/
+    - contracts/
+    - scripts/
+  validators:
+    - python3 scripts/run_metaharness.py --contract contracts/examples/repository-adoption.medium.valid.yaml
+  rollback_path: git revert the resulting local commit
+
+metaharness_adoption:
+  source_version: current working tree before this contract
+  target_repo: any repository adopting metaharness controls
+  adoption_goal: make agents distinguish portable copy targets from repo-specific interpretation targets
+  adopted:
+    - source: docs/repository-adoption.md
+      class: interpret_pattern
+      target: target repo adoption note or local agent-harness documentation
+      local_owner: target repo maintainer
+      local_decision: use as the classification guide before copying metaharness artifacts
+      verification: target repo records copied, adapted, interpreted, referenced, and skipped artifacts
+    - source: scripts/*_gate.py
+      class: copy_then_configure
+      target: target repo scripts/ or tools/ directory
+      local_owner: target repo maintainer
+      local_decision: copy only validators the target repo will run and configure contract paths locally
+      verification: copied validators pass on target repo fixtures
+  skipped:
+    - source: full metaharness repository vendoring
+      reason: target repos should import minimal enforceable artifacts rather than mirror the shared reference repository
+  local_policy_sources:
+    - target repo AGENTS.md or resolver
+    - target repo docs/agent-harness.md or equivalent
+  validators:
+    - python3 scripts/run_metaharness.py --contract <target-contract.yaml>
+  rollback_path: revert the target repo adoption commit
+  update_policy: review upstream metaharness changes only when target repo harness policy or validators are intentionally updated

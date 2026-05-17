@@ -1,0 +1,86 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+title: Metaharness repository adoption packet
+type: object
+additionalProperties: true
+required:
+  - metaharness_adoption
+properties:
+  metaharness_adoption:
+    type: object
+    additionalProperties: false
+    required:
+      - source_version
+      - target_repo
+      - adoption_goal
+      - adopted
+      - local_policy_sources
+      - validators
+      - update_policy
+    properties:
+      source_version:
+        type: string
+        description: Metaharness commit, tag, or release used as adoption source.
+      target_repo:
+        type: string
+      adoption_goal:
+        type: string
+      adopted:
+        type: array
+        minItems: 1
+        items:
+          type: object
+          additionalProperties: false
+          required: [source, class, target, local_decision]
+          properties:
+            source:
+              type: string
+              description: Source path or concept in metaharness.
+            class:
+              type: string
+              enum:
+                - copy_as_is
+                - copy_then_configure
+                - adapt_policy
+                - interpret_pattern
+                - reference_only
+            target:
+              type: string
+              description: Target repo path, receipt section, or external reference.
+            local_owner:
+              type: string
+            local_decision:
+              type: string
+            verification:
+              type: string
+          allOf:
+            - if:
+                properties:
+                  class:
+                    enum: [copy_as_is, copy_then_configure]
+              then:
+                required: [local_owner, verification]
+      skipped:
+        type: array
+        items:
+          type: object
+          additionalProperties: false
+          required: [source, reason]
+          properties:
+            source:
+              type: string
+            reason:
+              type: string
+      local_policy_sources:
+        type: array
+        minItems: 1
+        items:
+          type: string
+      validators:
+        type: array
+        minItems: 1
+        items:
+          type: string
+      rollback_path:
+        type: string
+      update_policy:
+        type: string

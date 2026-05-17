@@ -18,6 +18,18 @@ Reduce repeated human steering by making the workflow itself enforce:
 
 Metaharness is **not** a prompt dump. It is an architecture for binding agent execution to contracts, evidence, policy gates, validators, and audit receipts.
 
+## Adoption model
+
+Metaharness is a shared reference harness, not a repository that every target project should vendor wholesale. Agents adopting it into another repository must classify each artifact before importing it:
+
+- `copy_as_is` — deterministic validators, schemas, or fixtures that can run unchanged;
+- `copy_then_configure` — portable templates that need target paths, commands, authority, or rollback filled in;
+- `adapt_policy` — controls that must become target-repo instructions, tests, CI, or review gates;
+- `interpret_pattern` — explanatory patterns or failure taxonomies to summarize, not paste as binding policy;
+- `reference_only` / `skip` — background or non-applicable material.
+
+Start with [`docs/repository-adoption.md`](docs/repository-adoption.md), [`checklists/repository-adoption.md`](checklists/repository-adoption.md), and [`contracts/metaharness-adoption.schema.yaml`](contracts/metaharness-adoption.schema.yaml). Target repos should keep a single local policy source and import only the smallest enforceable subset.
+
 ## Repository map
 
 ```text
@@ -81,6 +93,7 @@ Run the structural gates directly with:
 python3 scripts/lb_gate.py --contract <contract.yaml>
 python3 scripts/metaharness_gate.py --risk <low|medium|high> --contract <contract.yaml>
 python3 scripts/phase_risk_gate.py --contract <contract.yaml>
+python3 scripts/adoption_gate.py --contract <repository-adoption-contract.yaml>
 python3 scripts/activity_feedback_gate.py --packet <activity-feedback-packet.yaml>
 python3 scripts/commit_scope_audit.py --base main --head HEAD --json
 ```

@@ -7,6 +7,8 @@ This file is the generic entrypoint for any agent runtime that reads `AGENTS.md`
 1. Read `.agent/RESOLVER.md` to resolve the task type, required contract, and validation route.
 2. Use shared repo files as the source of truth:
    - `README.md` — repo purpose and map.
+   - `docs/repository-adoption.md` — how target repos decide what to copy, configure, adapt, interpret, reference, or skip.
+   - `checklists/repository-adoption.md` — review checklist for adopting metaharness into another repo.
    - `docs/architecture.md` — seven-layer harness model.
    - `docs/failure-mode-catalog.md` — gateable anti-patterns and failures.
    - `docs/phase-risk-gates.md` — lifecycle phase gates.
@@ -16,6 +18,10 @@ This file is the generic entrypoint for any agent runtime that reads `AGENTS.md`
    - `scripts/` — executable validators and helpers.
    - `skills/` — reusable harness skills and references.
 3. Do not copy or reinterpret policy into this file. If policy changes, update shared docs/scripts/contracts and then update adapters only as pointers.
+
+## Adoption into target repositories
+
+When using metaharness in another repository, do not assume the target should copy this whole repo. First read the target repo's own instructions, then classify each candidate artifact as `copy_as_is`, `copy_then_configure`, `adapt_policy`, `interpret_pattern`, `reference_only`, or `skip` using `docs/repository-adoption.md`. Deterministic validators and schemas are the most copyable; docs, examples, adapters, role names, authority rules, and release policy usually need target-specific interpretation.
 
 ## Contract requirement
 

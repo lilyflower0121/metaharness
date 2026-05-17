@@ -67,6 +67,8 @@ def main() -> int:
     ]
     if has_section(data, "artifact_flow"):
         commands.append([sys.executable, "scripts/artifact_flow_gate.py", "--contract", rel])
+    if has_section(data, "metaharness_adoption"):
+        commands.append([sys.executable, "scripts/adoption_gate.py", "--contract", rel])
     for packet in activity_feedback_packets(data):
         commands.append([sys.executable, "scripts/activity_feedback_gate.py", "--packet", packet])
 

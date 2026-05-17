@@ -96,6 +96,8 @@ For human review and publication, `io_publication` contracts plus `scripts/rende
 
 For runtime portability, `portable-agent-adapter-harness` keeps Claude Code, Codex, Hermes Agent, and other agents on the same shared command surface. Runtime files such as `CLAUDE.md`, `AGENTS.md`, and Hermes `SKILL.md` are adapters; they must point back to the shared contract and scripts rather than becoming separate policy sources.
 
+For adoption into other repositories, this repository is the reference source, not the artifact to copy wholesale. Target repositories should classify each candidate artifact as `copy_as_is`, `copy_then_configure`, `adapt_policy`, `interpret_pattern`, `reference_only`, or `skip`. Standalone validators and schemas are often copyable; policy docs, examples, adapters, roles, and failure taxonomies usually need interpretation into the target repo's existing commands, CI, risk model, and policy source. See `docs/repository-adoption.md`.
+
 ## Layer 5: Validator Compilation Layer
 
 Convert accepted requirements into checks whenever possible.

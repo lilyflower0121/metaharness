@@ -18,6 +18,7 @@ When starting a task in this repo, resolve in this order:
 | If the task is about... | Read first | Contract? | Required validators |
 | --- | --- | --- | --- |
 | Understanding the repo, read-only explanation | `README.md`, `docs/architecture.md`, relevant docs | Usually no | Cite files read; no-gate reason |
+| Adopting metaharness into another repository | Target repo instructions first, then `docs/repository-adoption.md`, `checklists/repository-adoption.md`, `contracts/metaharness-adoption.schema.yaml` | Yes for copied/adapted policy | target repo checks plus adoption receipt; classify copy/adapt/interpret/reference/skip |
 | Creating/changing harness docs, rules, checklists, skills, adapters, or scripts | `docs/architecture.md`, `docs/failure-mode-catalog.md`, relevant target file | Yes for non-trivial/multi-file | `run_metaharness.py`; focused script/doc check |
 | Coding-agent delegation or Git checkpointing | `docs/commit-scoped-agent-delegation.md`, `patterns/coding-pipeline.md` | Yes | `commit_scope_audit.py`, `run_metaharness.py` |
 | Subagent / multi-agent orchestration, handoff, or delegation failure modes | `docs/failure-mode-catalog.md`, `patterns/coding-pipeline.md`, relevant contract | Yes for non-trivial delegation | subtask contract read-back, independent validator, `run_metaharness.py` |
@@ -103,6 +104,9 @@ python3 scripts/run_metaharness.py --contract <contract.yaml>
 # Adapter integrity
 python3 scripts/check_agent_adapters.py
 
+# Repository adoption packet
+python3 scripts/adoption_gate.py --contract <contract.yaml>
+
 # Commit/branch impact routing
 python3 scripts/commit_scope_audit.py --base <base> --head <head> --json
 
@@ -118,6 +122,8 @@ Do not replace these with narrative claims. If a command cannot be run, explain 
 | --- | --- | --- |
 | `AGENTS.md` | Generic repo-root agent adapter | Thin pointer to this resolver and shared commands |
 | `.agent/RESOLVER.md` | Cross-runtime routing index | Update when adding new task modes or validator routes |
+| `docs/repository-adoption.md` | Adoption guide for target repositories | Classifies artifacts as copy/configure/adapt/interpret/reference/skip before import |
+| `checklists/repository-adoption.md` | Manual adoption review checklist | Use when another repo imports metaharness artifacts or principles |
 | `adapters/` | Vendor/runtime-specific adapters | Must stay thin; validate with `check_agent_adapters.py` |
 | `contracts/` | Schemas and example contracts | Keep examples public-safe and validator-compatible |
 | `docs/` | Shared rationale and policy docs | Normative docs should point to executable validators |
