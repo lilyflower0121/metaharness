@@ -67,6 +67,12 @@ Initial skills:
 - [`skills/high-risk-side-effect-harness`](skills/high-risk-side-effect-harness/SKILL.md)
 - [`skills/validator-gate-authoring`](skills/validator-gate-authoring/SKILL.md)
 
+Activity and feedback capture:
+
+- [`docs/activity-feedback-capture.md`](docs/activity-feedback-capture.md) — how to structure what the agent did, what feedback arrived, which deltas were accepted, and what was retained
+- [`contracts/activity-feedback-capture.schema.yaml`](contracts/activity-feedback-capture.schema.yaml) — portable schema for JSONL/database/event-log implementations
+- [`checklists/activity-feedback-capture.md`](checklists/activity-feedback-capture.md) — manual review checklist for privacy, feedback disposition, promotion, and retention
+
 Each skill has its own `references/` and `scripts/` support files. Common artifact-building flows are managed by `artifact-build-flow-harness`; risk-specific strictness is added by the low/medium/high skills.
 
 Run the structural gates directly with:

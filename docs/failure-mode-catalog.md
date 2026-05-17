@@ -80,6 +80,9 @@ Lower-bound (LB) families:
 | FM-037 | Human review bottleneck / review fatigue | merge, release, operate | medium+ | review compression and exception-routing gate |
 | FM-038 | Final-format extraction failure | all | low+ | schema/output-shape validation and repair gate |
 | FM-039 | Prompt-only accumulation | specification, operate, retention | medium | move-to-validator/skill/reference gate |
+| FM-040 | Raw trace hoarding | exploration, operate, retention | medium+ | activity/feedback privacy and retention gate |
+| FM-041 | Feedback applied without disposition | mvp_exploration, specification, implementation, retention | medium+ | feedback ledger and requirement-delta gate |
+| FM-042 | Model inference promoted as requirement | mvp_exploration, specification, retention | medium+ | confirmation and validator-promotion gate |
 
 ## Agent development / delegation anti-patterns
 
@@ -103,6 +106,9 @@ These modes come from `/Users/lily/cowork/research/paper/2026-05-17_agent_develo
 - **Human review bottleneck**: route humans to failed, unknown, high-risk, side-effect, and policy-exception cases; convert repeated review comments into validators.
 - **Final-format extraction failure**: distinguish bad reasoning from malformed output; use schema validation and repair passes when the trace contains enough evidence.
 - **Prompt-only accumulation**: do not keep appending prose instructions; move recurring failures into validators, scripts, skills, references, or eval cases.
+- **Raw trace hoarding**: activity logs, recordings, and tool outputs are evidence artifacts, not the default memory layer. Capture structured event summaries and evidence refs; store raw private payloads only with classification, redaction, TTL, and access controls.
+- **Feedback applied without disposition**: every human/test/runtime/reviewer signal must be classified and marked unreviewed/accepted/rejected/needs clarification/promoted/discarded before it changes contracts, code, skills, or evals.
+- **Model inference promoted as requirement**: an agent can propose requirement deltas from traces, but confirmation or validator evidence is required before retention or implementation.
 
 ## Commit-scoped delegation anti-patterns
 

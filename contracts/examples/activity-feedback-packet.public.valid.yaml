@@ -1,0 +1,102 @@
+schema: metaharness.activity_feedback_capture.v0
+run:
+  run_id: run_2026_05_17_public_example
+  parent_run_id: ""
+  task_contract_ref: contracts/examples/activity-feedback-capture.medium.valid.yaml
+  phase: implementation
+  risk_tier: medium
+  actor_role: executor
+  runtime: portable-agent
+  started_at: "2026-05-17T00:00:00Z"
+  ended_at: "2026-05-17T00:05:00Z"
+  status: succeeded
+  objective_ref: docs/activity-feedback-capture.md#design-principle
+  non_goal_refs:
+    - no raw private prompt capture
+    - no unreviewed feedback promotion
+privacy:
+  data_classification: public
+  raw_private_content_stored: false
+  secrets_stored: false
+  redaction_status: not_needed
+  evidence_access_model: repository_inherited
+  retention_ttl: retain as public example until schema revision
+  prohibited_payloads:
+    - raw secrets
+    - private prompts
+    - full tool outputs
+    - PII
+    - chain-of-thought
+events:
+  - event_id: evt_001
+    timestamp: "2026-05-17T00:01:00Z"
+    actor_role: executor
+    event_type: artifact_read
+    action_summary: Read prior research synthesis and repository architecture docs.
+    target_ref: docs/activity-feedback-capture.md#source-signals-behind-this-pattern
+    status: succeeded
+    evidence_refs:
+      - research_synthesis:2026-05-16_multimodal-mvp-feedback-harness
+      - docs/architecture.md
+    output_ref: ""
+    error_summary: ""
+    raw_payload_stored: false
+  - event_id: evt_002
+    timestamp: "2026-05-17T00:03:00Z"
+    actor_role: executor
+    event_type: artifact_write
+    action_summary: Added a portable schema and checklist for activity/feedback capture.
+    target_ref: contracts/activity-feedback-capture.schema.yaml
+    status: succeeded
+    evidence_refs:
+      - evt_001
+    output_ref: contracts/activity-feedback-capture.schema.yaml
+    error_summary: ""
+    raw_payload_stored: false
+feedback:
+  - feedback_id: fb_001
+    timestamp: "2026-05-17T00:02:00Z"
+    source_type: human
+    authority: instruction
+    related_event_ids:
+      - evt_001
+    summary: Reflect prior research into metaharness rather than runtime-specific logging.
+    evidence_refs:
+      - task_request
+    sentiment_or_signal: correction
+    disposition: accepted
+    reviewer: task owner
+    rationale: The requested durable asset is a portable metaharness pattern.
+requirement_deltas:
+  - delta_id: delta_001
+    source_feedback_ids:
+      - fb_001
+    classification: accepted_requirement
+    statement: Provide a public, runtime-neutral capture schema and review checklist.
+    evidence_refs:
+      - fb_001
+      - docs/architecture.md
+    status: accepted
+    validator_refs:
+      - python3 scripts/run_metaharness.py --contract contracts/examples/activity-feedback-capture.medium.valid.yaml
+    owner: repository maintainer
+promotions:
+  - promotion_id: promo_001
+    source_delta_ids:
+      - delta_001
+    target_type: contract_update
+    target_ref: contracts/activity-feedback-capture.schema.yaml
+    verification: Shared metaharness validator suite plus manual public-safety review.
+    approved_by: task owner request + validator pass
+    status: completed
+retention:
+  keep_refs:
+    - docs/activity-feedback-capture.md
+    - contracts/activity-feedback-capture.schema.yaml
+    - checklists/activity-feedback-capture.md
+  discard_refs:
+    - raw private prompt text
+    - full tool output transcript
+  retention_reason: Keep generalized schema/docs/checklist; discard session-specific raw traces.
+  review_status: reviewed
+  next_review: on schema revision

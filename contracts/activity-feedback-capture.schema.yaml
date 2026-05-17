@@ -1,0 +1,116 @@
+# Draft schema for structured agent activity and feedback capture.
+# This intentionally mirrors the simple YAML style used by other metaharness
+# draft schemas so it can be adapted to JSON Schema, Pydantic, Zod, SQL, or JSONL.
+
+schema: metaharness.activity_feedback_capture.v0
+required:
+  - run
+  - privacy
+  - events
+  - feedback
+  - retention
+
+fields:
+  run:
+    type: object
+    description: Metadata for a bounded agent run or delegated sub-run.
+    fields:
+      run_id: string
+      parent_run_id: string
+      task_contract_ref: string
+      phase: enum[exploration, mvp_exploration, specification, implementation, merge, release, operate, retention]
+      risk_tier: enum[low, medium, high]
+      actor_role: enum[intake, planner, executor, tester, validator, curator, tool, human]
+      runtime: string
+      started_at: string
+      ended_at: string
+      status: enum[started, succeeded, failed, blocked, skipped, rolled_back]
+      objective_ref: string
+      non_goal_refs: list[string]
+
+  privacy:
+    type: object
+    description: Data boundary for the capture packet and referenced evidence.
+    fields:
+      data_classification: enum[public, internal, confidential, restricted]
+      raw_private_content_stored: boolean
+      secrets_stored: boolean
+      redaction_status: enum[not_needed, pending, redacted, failed]
+      evidence_access_model: enum[repository_inherited, local_only, restricted_artifact, external_system]
+      retention_ttl: string
+      prohibited_payloads: list[string]
+
+  events:
+    type: list[object]
+    description: Ordered activity records. These may be stored as JSONL rows in implementations.
+    item_fields:
+      event_id: string
+      timestamp: string
+      actor_role: enum[intake, planner, executor, tester, validator, curator, tool, human]
+      event_type: enum[plan_step, tool_call, artifact_read, artifact_write, command_run, delegation, validation, feedback_review, retention_decision, stop, rollback]
+      action_summary: string
+      target_ref: string
+      status: enum[started, succeeded, failed, blocked, skipped, rolled_back]
+      evidence_refs: list[string]
+      output_ref: string
+      error_summary: string
+      raw_payload_stored: boolean
+
+  feedback:
+    type: list[object]
+    description: Human, validator, test, runtime, and reviewer feedback records.
+    item_fields:
+      feedback_id: string
+      timestamp: string
+      source_type: enum[human, validator, test, runtime, reviewer, external_message, model_inference]
+      authority: enum[instruction, approval, evidence_only, weak_signal]
+      related_event_ids: list[string]
+      summary: string
+      evidence_refs: list[string]
+      sentiment_or_signal: enum[positive, negative, neutral, attention, correction, blocker]
+      disposition: enum[unreviewed, accepted, rejected, needs_clarification, promoted, discarded]
+      reviewer: string
+      rationale: string
+
+  requirement_deltas:
+    type: list[object]
+    description: Candidate and accepted changes inferred from feedback.
+    item_fields:
+      delta_id: string
+      source_feedback_ids: list[string]
+      classification: enum[accepted_requirement, bug, ux_issue, preference, non_goal, security_issue, compliance_issue, open_question, rejected_inference]
+      statement: string
+      evidence_refs: list[string]
+      status: enum[proposed, accepted, rejected, deferred]
+      validator_refs: list[string]
+      owner: string
+
+  promotions:
+    type: list[object]
+    description: Reviewed feedback converted into durable harness assets.
+    item_fields:
+      promotion_id: string
+      source_delta_ids: list[string]
+      target_type: enum[validator, eval_case, skill, reference, memory, contract_update, checklist, discard]
+      target_ref: string
+      verification: string
+      approved_by: string
+      status: enum[proposed, accepted, rejected, completed]
+
+  retention:
+    type: object
+    description: Final disposition of captured information.
+    fields:
+      keep_refs: list[string]
+      discard_refs: list[string]
+      retention_reason: string
+      review_status: enum[unreviewed, reviewed, blocked]
+      next_review: string
+
+invariants:
+  - secrets_stored must be false unless data_classification is restricted and redaction_status is redacted or not_needed by explicit policy.
+  - raw_private_content_stored should be false for public repositories; use evidence_refs instead.
+  - source_type external_message has authority evidence_only unless separately approved in the task contract.
+  - model_inference feedback cannot become accepted_requirement without human, validator, or reviewer confirmation.
+  - every accepted requirement_delta should have at least one validator_ref or a manual review checklist reference.
+  - every promotion should cite source_delta_ids and verification.

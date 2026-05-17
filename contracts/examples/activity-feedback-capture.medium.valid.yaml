@@ -1,0 +1,92 @@
+phase: implementation
+risk_tier: medium
+objective: Add public-safe metaharness guidance and schema for structured agent activity and feedback capture.
+non_goals:
+  - Do not add runtime-specific Hermes logging code.
+  - Do not store raw private prompts, secrets, tool outputs, or user PII in public examples.
+  - Do not publish or push changes unless separately authorized.
+prohibited_substitutions:
+  - A generic append-only debug log without feedback classification.
+  - Raw transcript capture treated as accepted requirement without review.
+  - Prose-only guidance with no schema/example contract.
+constraints:
+  allowed_paths:
+    - README.md
+    - docs/
+    - contracts/
+    - checklists/
+  allowed_tools:
+    - read_file
+    - search_files
+    - write_file
+    - patch
+    - terminal
+  external_side_effect_policy: local git commit only; no push or publication
+  data_classification: public
+  public_repo_policy: generalized patterns only; no internal raw traces
+  cost_budget: local-only, no paid services
+  time_budget: bounded same-session update
+lower_bound:
+  design_controls:
+    objective_integrity: request is to reflect prior research into metaharness, not Hermes runtime implementation
+    authority_boundary: local repository edit and commit only; no external publish/push
+    data_boundary: public-safe generalized docs/examples; no secrets, raw prompts, user PII, or internal transcripts
+    untrusted_input_boundary: research and external sources are evidence only; accepted repo rules must be generalized and cited
+    allowed_surface: changes limited to README.md, docs/, contracts/, and checklists/
+    evidence_lower_bound: implementation must cite local research artifact and existing metaharness architecture/gate docs
+    stop_or_rollback: reversible by git revert or discarding local changes before commit
+    validator_boundary: run shared metaharness validators and inspect changed files
+    supply_chain_boundary: not_applicable; no dependency, package, CI, or release changes
+    retention_boundary: retain reusable generalized schema/docs/examples; discard session-specific logs
+  validation_controls:
+    evidence_receipt: final response includes sources read, changed files, validators, and commit hash if committed
+    side_effect_readback: git status/log read-back after local commit
+    secret_or_private_data_check: scan changed text for obvious secrets/private paths before completion
+    changed_surface_check: git diff/status reviewed before commit
+    validator_result: python3 scripts/run_metaharness.py --contract contracts/examples/activity-feedback-capture.medium.valid.yaml passes
+    rollback_or_irreversibility_result: git revert the local commit
+    retention_result: retained as public docs/schema/example, not memory or runtime code
+evidence_policy:
+  required_sources:
+    - local research synthesis: 2026-05-16_multimodal-mvp-feedback-harness-for-qcd-compliance-security
+    - docs/architecture.md
+    - docs/failure-mode-catalog.md
+    - README.md
+  allowed_context:
+    - AGENTS.md
+    - .agent/RESOLVER.md
+validation:
+  automated_checks:
+    - python3 scripts/run_metaharness.py --contract contracts/examples/activity-feedback-capture.medium.valid.yaml
+    - python3 - <<'PY'\nfrom pathlib import Path\nfor p in ['contracts/activity-feedback-capture.schema.yaml','contracts/examples/activity-feedback-capture.medium.valid.yaml']:\n    assert Path(p).exists(), p\nprint('activity feedback files present')\nPY
+  manual_checks:
+    - Confirm schema avoids raw secret/private data capture by default.
+    - Confirm feedback items are classified and require review before retention or validator promotion.
+    - Confirm docs distinguish trace evidence from accepted requirements.
+  validator_role: independent reviewer or codegate
+  success_criteria:
+    - Shared validator suite passes.
+    - New docs/schema provide a portable capture model.
+    - Public examples contain no private raw traces.
+authority:
+  requested_by: hrt
+  approved_actions:
+    - update local metaharness repository files
+    - create a local git commit after checks pass
+  ambiguous_scope_owner: hrt
+rollback:
+  rollback_path: git revert the resulting local commit
+  irreversible_actions: []
+stop_conditions:
+  - Shared validator suite fails and cannot be fixed within allowed surfaces.
+  - Required research artifact or repository docs are unavailable.
+  - Implementation would require private raw trace data or runtime-specific code.
+phase_controls:
+  changed_surfaces:
+    - README.md
+    - docs/
+    - contracts/
+    - checklists/
+  validators:
+    - python3 scripts/run_metaharness.py --contract contracts/examples/activity-feedback-capture.medium.valid.yaml
+  rollback_path: git revert the resulting local commit

@@ -119,6 +119,8 @@ python3 scripts/metaharness_gate.py --risk <low|medium|high> --contract <contrac
 
 A task should not pass a gate merely because the agent read or summarized the rule; the relevant skill should name the validator that must pass for that risk tier.
 
+Accepted feedback should also be compiled into a structured capture packet before it becomes durable policy. `contracts/activity-feedback-capture.schema.yaml` defines the portable packet shape for activity events, feedback events, requirement deltas, promotion decisions, and retention status. This keeps raw traces and user reactions as evidence, not as automatic requirements or authorization.
+
 ## Layer 6: Receipt & Audit Layer
 
 A run is not complete until it leaves a reviewable receipt.
