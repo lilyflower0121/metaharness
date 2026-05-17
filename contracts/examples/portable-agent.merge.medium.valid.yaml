@@ -1,0 +1,36 @@
+schema: metaharness.contract.v0
+objective: "Demonstrate portable metaharness gate use across Claude Code, Codex, and Hermes Agent."
+risk_tier: medium
+phase: merge
+non_goals:
+  - "Do not publish or release externally."
+prohibited_substitutions:
+  - "Do not replace executable validation with narrative summary."
+constraints:
+  external_side_effect_policy: "no external side effects"
+  allowed_paths:
+    - "adapters/"
+    - "scripts/"
+    - "docs/"
+  allowed_tools:
+    - "python3"
+    - "git"
+evidence_policy:
+  required_sources:
+    - "adapter files"
+    - "validator output"
+validation:
+  success_criteria:
+    - "shared runner passes"
+  validator_role: "independent gate runner"
+  automated_checks:
+    - "python3 scripts/check_agent_adapters.py"
+    - "python3 scripts/run_metaharness.py --contract contracts/examples/portable-agent.merge.medium.valid.yaml"
+rollback:
+  rollback_path: "Revert adapter files and scripts in git."
+stop_conditions:
+  - "adapter validation fails"
+phase_controls:
+  independent_validation: "scripts/check_agent_adapters.py"
+  receipt_path: "terminal output from run_metaharness.py"
+  clean_status_check: "git status --short"

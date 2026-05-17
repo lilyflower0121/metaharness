@@ -22,6 +22,7 @@ Metaharness is **not** a prompt dump. It is an architecture for binding agent ex
 
 ```text
 metaharness/
+  adapters/    Thin runtime adapters for Claude Code, Codex, Hermes Agent
   principles/   Human-readable design principles
   contracts/    Machine-readable schemas and task packets
   rules/        Normative harness rules
@@ -30,6 +31,8 @@ metaharness/
   examples/     Concrete sample harness packets
   evals/        Failure cases and regression scenarios
   docs/         Glossary and design rationale
+  scripts/      Executable validators and portable gate runners
+  skills/       Harness skills with references and support scripts
 ```
 
 ## Initial architecture
@@ -53,7 +56,8 @@ Harness rules should be packaged as skills with risk-appropriate validators, not
 Initial skills:
 
 - [`skills/artifact-build-flow-harness`](skills/artifact-build-flow-harness/SKILL.md) — shared flow for code development and artifact construction
-- [`skills/phase-risk-gate-harness`](skills/phase-risk-gate-harness/SKILL.md) — phase + risk based gate selection
+- [`skills/phase-risk-gate-harness`](skills/phase-risk-gate-harness/SKILL.md) — selects gates by lifecycle phase as well as risk tier
+- [`skills/portable-agent-adapter-harness`](skills/portable-agent-adapter-harness/SKILL.md) — keeps Claude Code, Codex, Hermes Agent, and other runtimes on the same executable gate contract
 - [`skills/low-risk-readonly-harness`](skills/low-risk-readonly-harness/SKILL.md)
 - [`skills/medium-risk-change-harness`](skills/medium-risk-change-harness/SKILL.md)
 - [`skills/high-risk-side-effect-harness`](skills/high-risk-side-effect-harness/SKILL.md)
@@ -61,14 +65,20 @@ Initial skills:
 
 Each skill has its own `references/` and `scripts/` support files. Common artifact-building flows are managed by `artifact-build-flow-harness`; risk-specific strictness is added by the low/medium/high skills.
 
-Run the structural gate with:
+Run the structural gates directly with:
 
 ```bash
 python3 scripts/metaharness_gate.py --risk <low|medium|high> --contract <contract.yaml>
 python3 scripts/phase_risk_gate.py --contract <contract.yaml>
 ```
 
-See [`docs/risk-tiered-skills.md`](docs/risk-tiered-skills.md) and [`docs/phase-risk-gates.md`](docs/phase-risk-gates.md).
+For Claude Code, Codex, Hermes Agent, and other agent runtimes, prefer the portable suite entrypoint:
+
+```bash
+python3 scripts/run_metaharness.py --contract <contract.yaml>
+```
+
+See [`docs/risk-tiered-skills.md`](docs/risk-tiered-skills.md), [`docs/phase-risk-gates.md`](docs/phase-risk-gates.md), and [`docs/portable-agent-adapters.md`](docs/portable-agent-adapters.md).
 
 ## Status
 

@@ -90,6 +90,8 @@ For code-development or artifact-construction work, the shared `artifact-build-f
 
 For lifecycle control, `phase-risk-gate-harness` chooses different gates for exploration, MVP exploration, specification, implementation, merge, release, operate, and retention. This keeps early discovery fast while making merge/release/operation gates stricter.
 
+For runtime portability, `portable-agent-adapter-harness` keeps Claude Code, Codex, Hermes Agent, and other agents on the same shared command surface. Runtime files such as `CLAUDE.md`, `AGENTS.md`, and Hermes `SKILL.md` are adapters; they must point back to the shared contract and scripts rather than becoming separate policy sources.
+
 ## Layer 5: Validator Compilation Layer
 
 Convert accepted requirements into checks whenever possible.

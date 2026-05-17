@@ -14,6 +14,7 @@ Metaharness rules should not remain prose-only. Each rule family should be packa
 
 - [`skills/artifact-build-flow-harness`](../skills/artifact-build-flow-harness/SKILL.md) — shared layer for code-development and artifact-construction flows
 - [`skills/phase-risk-gate-harness`](../skills/phase-risk-gate-harness/SKILL.md) — selects different checks by lifecycle phase and risk
+- [`skills/portable-agent-adapter-harness`](../skills/portable-agent-adapter-harness/SKILL.md) — exposes the same gates to Claude Code, Codex, Hermes Agent, and other runtimes
 - [`skills/low-risk-readonly-harness`](../skills/low-risk-readonly-harness/SKILL.md)
 - [`skills/medium-risk-change-harness`](../skills/medium-risk-change-harness/SKILL.md)
 - [`skills/high-risk-side-effect-harness`](../skills/high-risk-side-effect-harness/SKILL.md)
@@ -43,6 +44,7 @@ The gate validates structural obligations for the declared risk tier. It intenti
 | Validator compilation | Meta | validator-gate-authoring |
 | Code/artifact construction flow | Shared | artifact-build-flow-harness |
 | Lifecycle phase selection | Shared | phase-risk-gate-harness |
+| Runtime portability | Shared | portable-agent-adapter-harness |
 
 ## Design note
 
