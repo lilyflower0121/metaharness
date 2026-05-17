@@ -47,6 +47,11 @@ A low-risk contract must include:
 
 ## Code-Level Gate
 
+This skill also ships a wrapper script and reference:
+
+- `scripts/check_contract.py --contract <contract.yaml>` runs the low-risk gate.
+- `references/read-only-evidence-receipt.md` describes the evidence receipt.
+
 Run before marking the task complete:
 
 ```bash

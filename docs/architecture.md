@@ -86,6 +86,8 @@ Recommended separation:
 
 For non-trivial work, the executor should not be the final certifier of its own output.
 
+For code-development or artifact-construction work, the shared `artifact-build-flow-harness` layer owns the common flow: artifact design packet, build plan, bounded execution, validator suite, receipt, and retention. Risk-tier skills then add low/medium/high strictness.
+
 ## Layer 5: Validator Compilation Layer
 
 Convert accepted requirements into checks whenever possible.

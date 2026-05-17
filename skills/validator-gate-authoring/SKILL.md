@@ -40,6 +40,11 @@ Use when:
 
 ## Validator Design Rules
 
+This skill also ships support artifacts:
+
+- `scripts/check_skill_contracts.py` verifies that skills include frontmatter plus support directories.
+- `references/validator-design-patterns.md` lists structural, artifact-flow, static-scan, receipt, and negative-fixture patterns.
+
 - Prefer failing closed when a field is missing.
 - Keep high-risk gates stricter than medium-risk gates.
 - Do not allow the executor summary to satisfy independent validation by itself.

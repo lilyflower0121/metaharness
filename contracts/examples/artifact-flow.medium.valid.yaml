@@ -1,0 +1,51 @@
+risk_tier: medium
+objective: Build a reusable documentation-and-validator package.
+non_goals:
+  - Do not publish a release.
+prohibited_substitutions:
+  - Do not provide prose-only rules without validators.
+constraints:
+  allowed_paths:
+    - docs/
+    - skills/
+    - scripts/
+    - contracts/
+  allowed_tools:
+    - write_file
+    - terminal
+  external_side_effect_policy: bounded repository/local changes only
+  data_classification: public
+evidence_policy:
+  required_sources:
+    - user request
+    - repository files
+validation:
+  automated_checks:
+    - python3 scripts/artifact_flow_gate.py --contract contracts/examples/artifact-flow.medium.valid.yaml
+    - python3 scripts/metaharness_gate.py --risk medium --contract contracts/examples/artifact-flow.medium.valid.yaml
+  manual_checks:
+    - Review deliverables against non-goals.
+  validator_role: independent validator or codegate
+  success_criteria:
+    - Artifact-flow and medium-risk gates pass.
+rollback:
+  rollback_path: git revert the commit
+stop_conditions:
+  - Required validators cannot run.
+artifact_flow:
+  artifact_type: skill
+  target_users:
+    - agent harness maintainers
+  deliverables:
+    - risk-tiered skills
+    - executable validators
+    - references
+  build_steps:
+    - author skills
+    - add scripts
+    - add fixtures
+    - run gates
+  validators:
+    - python3 scripts/artifact_flow_gate.py --contract contracts/examples/artifact-flow.medium.valid.yaml
+    - python3 scripts/metaharness_gate.py --risk medium --contract contracts/examples/artifact-flow.medium.valid.yaml
+  acceptance_receipt: validation receipt in final task report

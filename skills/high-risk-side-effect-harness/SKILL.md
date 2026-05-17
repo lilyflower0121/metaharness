@@ -50,6 +50,11 @@ A high-risk contract must include:
 
 ## Code-Level Gate
 
+This skill also ships a wrapper script and reference:
+
+- `scripts/check_contract.py --contract <contract.yaml>` runs the high-risk gate.
+- `references/authority-and-readback.md` describes authority and durable read-back.
+
 Run before the side effect and again before reporting completion:
 
 ```bash

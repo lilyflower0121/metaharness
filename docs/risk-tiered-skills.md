@@ -12,10 +12,16 @@ Metaharness rules should not remain prose-only. Each rule family should be packa
 
 ## Skills
 
+- [`skills/artifact-build-flow-harness`](../skills/artifact-build-flow-harness/SKILL.md) — shared layer for code-development and artifact-construction flows
 - [`skills/low-risk-readonly-harness`](../skills/low-risk-readonly-harness/SKILL.md)
 - [`skills/medium-risk-change-harness`](../skills/medium-risk-change-harness/SKILL.md)
 - [`skills/high-risk-side-effect-harness`](../skills/high-risk-side-effect-harness/SKILL.md)
 - [`skills/validator-gate-authoring`](../skills/validator-gate-authoring/SKILL.md)
+
+Each skill should carry support files:
+
+- `references/` for durable patterns and review criteria
+- `scripts/` for executable gates, wrappers, fixture checks, or generators
 
 ## Gate command
 
@@ -34,6 +40,7 @@ The gate validates structural obligations for the declared risk tier. It intenti
 | Executor / validator separation | Medium+ | medium-risk-change-harness, high-risk-side-effect-harness |
 | Side-effect authorization | High | high-risk-side-effect-harness |
 | Validator compilation | Meta | validator-gate-authoring |
+| Code/artifact construction flow | Shared | artifact-build-flow-harness |
 
 ## Design note
 

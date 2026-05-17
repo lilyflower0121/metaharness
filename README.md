@@ -52,10 +52,13 @@ Harness rules should be packaged as skills with risk-appropriate validators, not
 
 Initial skills:
 
+- [`skills/artifact-build-flow-harness`](skills/artifact-build-flow-harness/SKILL.md) — shared flow for code development and artifact construction
 - [`skills/low-risk-readonly-harness`](skills/low-risk-readonly-harness/SKILL.md)
 - [`skills/medium-risk-change-harness`](skills/medium-risk-change-harness/SKILL.md)
 - [`skills/high-risk-side-effect-harness`](skills/high-risk-side-effect-harness/SKILL.md)
 - [`skills/validator-gate-authoring`](skills/validator-gate-authoring/SKILL.md)
+
+Each skill has its own `references/` and `scripts/` support files. Common artifact-building flows are managed by `artifact-build-flow-harness`; risk-specific strictness is added by the low/medium/high skills.
 
 Run the structural gate with:
 

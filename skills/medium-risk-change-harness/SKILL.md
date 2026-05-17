@@ -52,6 +52,11 @@ A medium-risk contract must include:
 
 ## Code-Level Gate
 
+This skill also ships a wrapper script and reference:
+
+- `scripts/check_contract.py --contract <contract.yaml>` runs the medium-risk gate.
+- `references/reversible-change-validation.md` describes bounded change validation.
+
 Run before merging, pushing, or reporting completion:
 
 ```bash
