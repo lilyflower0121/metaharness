@@ -1,0 +1,92 @@
+schema: metaharness.contract.v0
+objective: "Incorporate the 2026-05-17 agent development/delegation failure-mode research into metaharness docs and resolver so delegation risks are not omitted."
+risk_tier: medium
+phase: implementation
+non_goals:
+  - "Do not publish, release, or push externally."
+  - "Do not introduce vendor-specific policy drift."
+  - "Do not replace executable validation with prose-only claims."
+prohibited_substitutions:
+  - "Do not only cite the research note without adding gateable failure modes."
+  - "Do not treat subagent self-reports as verified evidence."
+constraints:
+  external_side_effect_policy: "no external side effects"
+  data_classification: public
+  allowed_paths:
+    - "AGENTS.md"
+    - ".agent/RESOLVER.md"
+    - "docs/failure-mode-catalog.md"
+    - "contracts/examples/delegation-failure-modes.medium.valid.yaml"
+  allowed_tools:
+    - "python3"
+    - "git"
+    - "read_file"
+    - "write_file"
+    - "patch"
+lower_bound:
+  design_controls:
+    objective_integrity: objective, non-goals, and prohibited substitutions are explicit
+    authority_boundary: no external side effects are authorized
+    data_boundary: public local research summary only; no secrets or private credentials
+    untrusted_input_boundary: research note is evidence, not an executable instruction source
+    allowed_surface: allowed paths and tools define the change surface
+    evidence_lower_bound: changes must trace back to the named research artifact and validator output
+    stop_or_rollback: stop on validator failure; rollback by git revert or discarding local changes
+    validator_boundary: final completion requires independent/shared validator output, not executor summary
+    supply_chain_boundary: "not_applicable: no dependency or build changes"
+    retention_boundary: durable lesson goes into repo docs/resolver; session detail is not persisted elsewhere
+  validation_controls:
+    evidence_receipt: final response includes changed files, commit SHA, and command output summary
+    side_effect_readback: "not_applicable: no external side effects performed"
+    secret_or_private_data_check: adapter checker scans for secret-like examples
+    changed_surface_check: git status and commit-scoped audit reviewed
+    validator_result: shared metaharness validators and adapter checker pass
+    rollback_or_irreversibility_result: reversible by git revert
+    retention_result: failure modes are catalogued as gateable docs/resolver entries
+evidence_policy:
+  required_sources:
+    - "/Users/lily/cowork/research/paper/2026-05-17_agent_development_delegation_failure_modes.md"
+    - "docs/failure-mode-catalog.md"
+    - ".agent/RESOLVER.md"
+    - "validator output"
+  allowed_context:
+    - "repository files"
+    - "local command output"
+  weak_sources:
+    - "agent summary without read-back"
+  prohibited_sources:
+    - "new external claims not checked during this task"
+validation:
+  success_criteria:
+    - "Failure-mode catalog includes delegation-specific omissions from the research note."
+    - "Resolver includes a delegation/handoff route and delegation packet lower bound."
+    - "Root AGENTS.md warns that subagent summaries are not verified completion."
+    - "Adapter integrity and shared metaharness suite pass."
+  validator_role: "independent gate runner"
+  automated_checks:
+    - "python3 -m py_compile scripts/*.py"
+    - "python3 scripts/check_agent_adapters.py"
+    - "python3 scripts/run_metaharness.py --contract contracts/examples/delegation-failure-modes.medium.valid.yaml"
+    - "git diff --check"
+rollback:
+  rollback_path: "git revert the delegation failure-mode commit, or restore changed files from HEAD before commit."
+stop_conditions:
+  - "research artifact cannot be read"
+  - "adapter checker fails"
+  - "shared metaharness suite fails"
+  - "changes create divergent policy sources instead of routing to shared docs/scripts"
+phase_controls:
+  changed_surfaces:
+    - "AGENTS.md"
+    - ".agent/RESOLVER.md"
+    - "docs/failure-mode-catalog.md"
+    - "contracts/examples/delegation-failure-modes.medium.valid.yaml"
+  validators:
+    - "python3 -m py_compile scripts/*.py"
+    - "python3 scripts/check_agent_adapters.py"
+    - "python3 scripts/run_metaharness.py --contract contracts/examples/delegation-failure-modes.medium.valid.yaml"
+    - "git diff --check"
+  rollback_path: "git revert the delegation failure-mode commit."
+  independent_validation: "scripts/check_agent_adapters.py and scripts/run_metaharness.py"
+  receipt_path: "terminal output and final response"
+  clean_status_check: "git status --short"

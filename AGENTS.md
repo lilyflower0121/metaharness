@@ -50,6 +50,10 @@ For agent-authored Git changes, generate or inspect a commit/branch decision car
 python3 scripts/commit_scope_audit.py --base <base> --head <head> --json
 ```
 
+## Delegation failure-mode guard
+
+Before delegating to a subagent or another runtime, include a compact delegation packet with objective, non-goals, allowed surfaces, required sources/files, expected output schema, verification commands/read-backs, risk tier, and handoff-back requirements. A subagent summary is not completion until the parent verifies the referenced evidence.
+
 ## Coding-agent delegation rule
 
 For non-trivial repository changes, use independent roles conceptually even if one runtime executes them sequentially:

@@ -20,6 +20,7 @@ When starting a task in this repo, resolve in this order:
 | Understanding the repo, read-only explanation | `README.md`, `docs/architecture.md`, relevant docs | Usually no | Cite files read; no-gate reason |
 | Creating/changing harness docs, rules, checklists, skills, adapters, or scripts | `docs/architecture.md`, `docs/failure-mode-catalog.md`, relevant target file | Yes for non-trivial/multi-file | `run_metaharness.py`; focused script/doc check |
 | Coding-agent delegation or Git checkpointing | `docs/commit-scoped-agent-delegation.md`, `patterns/coding-pipeline.md` | Yes | `commit_scope_audit.py`, `run_metaharness.py` |
+| Subagent / multi-agent orchestration, handoff, or delegation failure modes | `docs/failure-mode-catalog.md`, `patterns/coding-pipeline.md`, relevant contract | Yes for non-trivial delegation | subtask contract read-back, independent validator, `run_metaharness.py` |
 | Lower-bound controls | `docs/lower-bound-gates.md`, `skills/lower-bound-gate-harness/SKILL.md` | Yes | `scripts/lb_gate.py` via `run_metaharness.py` |
 | Phase/risk gates | `docs/phase-risk-gates.md`, `skills/phase-risk-gate-harness/SKILL.md` | Yes | `scripts/phase_risk_gate.py` via `run_metaharness.py` |
 | Artifact construction flow | `skills/artifact-build-flow-harness/SKILL.md`, `skills/artifact-build-flow-harness/references/shared-artifact-build-flow.md` | Yes | `run_metaharness.py` plus artifact-flow gate when `artifact_flow` exists |
@@ -33,7 +34,7 @@ Infer the minimum risk from surfaces touched:
 
 - **Low**: read-only explanation, examples, typo/docs change with no policy effect, reversible local-only edits.
 - **Medium**: scripts, schemas, validators, adapters, skills, contracts, multi-file docs that affect behavior, repository instructions, generated artifacts.
-- **High**: external side effects, publish/release/deploy, credentials/secrets, auth/permission, data deletion/export, migrations, CI/CD, dependency/supply-chain changes, gate-policy changes that could weaken enforcement.
+- **High**: external side effects, publish/release/deploy, credentials/secrets, auth/permission, data deletion/export, migrations, CI/CD, dependency/supply-chain changes, gate-policy changes that could weaken enforcement, recursive delegation/scheduling, A2A handoff across trust boundaries, or broad tool/MCP exposure.
 
 If declared and inferred risk differ, use the higher tier or record the disagreement as an escalation.
 
@@ -64,6 +65,32 @@ Every gated task must preserve:
 - retention classification.
 
 See `docs/lower-bound-gates.md`.
+
+## Delegation packet lower bound
+
+When delegating to subagents or other runtimes, the parent must provide and later verify a compact evidence packet:
+
+```yaml
+delegation_packet:
+  objective: "single outcome"
+  non_goals: []
+  allowed_paths_or_surfaces: []
+  forbidden_substitutes: []
+  required_sources_or_files: []
+  expected_output_schema: []
+  verification_required:
+    commands: []
+    file_readbacks: []
+    evidence_paths: []
+  risk_tier: low|medium|high
+  handoff_back:
+    include_summary: true
+    include_evidence: true
+    include_uncertainties: true
+    include_next_gate: true
+```
+
+The parent must not treat a subagent self-report as completion unless the referenced files, URLs, commands, or receipts have been read back or independently validated.
 
 ## Validator command resolver
 
@@ -121,4 +148,6 @@ Stop and ask for human direction or report blocked if:
 - validator output fails and the failure is not intentionally being fixed;
 - required evidence is unavailable;
 - the requested change would make an adapter or prompt file the policy source of truth;
-- a command would need secrets, private credentials, or network access not authorized by the contract.
+- a command would need secrets, private credentials, or network access not authorized by the contract;
+- delegation lacks objective, non-goals, allowed surfaces, required evidence, output schema, and verification handoff;
+- a recursive delegation, cron, A2A handoff, or broad tool/MCP exposure is requested without explicit depth, budget, target allowlist, and authority controls.

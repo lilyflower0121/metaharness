@@ -62,6 +62,47 @@ Lower-bound (LB) families:
 | FM-019 | Test weakening hidden in agent commit | implementation, merge | medium+ | test-weakening detector + independent tester |
 | FM-020 | Receipt/hash drift after rebase or squash | merge | medium+ | commit/tree/parent receipt integrity gate |
 | FM-021 | Gate-policy tampering by the builder | implementation, merge | high | independent gate-policy review |
+| FM-022 | Framing omission before delegation | exploration, specification | medium+ | anti-rework front gate |
+| FM-023 | Hidden preconditions skipped | exploration, implementation | medium+ | prerequisite discovery gate |
+| FM-024 | Tool/path anchoring | exploration, implementation | low+ | alternative-lane gate |
+| FM-025 | Context density failure | all | medium | context budget / evidence narrowing gate |
+| FM-026 | File or artifact handoff unread | delegation, implementation, merge | medium+ | file-read receipt gate |
+| FM-027 | Tool-surface / MCP schema tax | exploration, implementation, operate | medium+ | tool allowlist and lazy-schema gate |
+| FM-028 | Delegation contract loss | delegation, implementation | medium+ | subtask contract and read-back gate |
+| FM-029 | Parallel subagent state conflict | delegation, implementation, merge | medium+ | shared-state and integration gate |
+| FM-030 | Multi-agent communication overhead | delegation, operate | medium | structured-state compression gate |
+| FM-031 | Recursive delegation runaway | delegation, operate | high | spawn-depth / budget / no-recursive-scheduling gate |
+| FM-032 | Test overtrust / agent-generated tests overfit | implementation, merge | medium+ | independent evaluator and hidden-assumption gate |
+| FM-033 | Regression blindness in harness evolution | implementation, merge, release | medium+ | regression-risk manifest and rollback gate |
+| FM-034 | Final-output-only review | all | medium+ | trajectory exception and tool/action audit gate |
+| FM-035 | A2A scope creep / delegated authority expansion | delegation, operate | high | handoff allowlist and payload validation gate |
+| FM-036 | Reliability metric flattening | evaluation, merge, operate | medium | multi-axis reliability evaluation gate |
+| FM-037 | Human review bottleneck / review fatigue | merge, release, operate | medium+ | review compression and exception-routing gate |
+| FM-038 | Final-format extraction failure | all | low+ | schema/output-shape validation and repair gate |
+| FM-039 | Prompt-only accumulation | specification, operate, retention | medium | move-to-validator/skill/reference gate |
+
+## Agent development / delegation anti-patterns
+
+These modes come from `/Users/lily/cowork/research/paper/2026-05-17_agent_development_delegation_failure_modes.md` and should be converted into validators or receipts where possible.
+
+- **Framing omission**: do not enter implementation/delegation without objective, non-goals, alternative frames, and a wrong-if condition.
+- **Hidden preconditions**: record local availability, permissions, data/API/auth/source quality, and critical unknowns before execution.
+- **Tool/path anchoring**: include primary/fallback/spike/reject lanes when a tool/model/path choice could change the result.
+- **Context density failure**: use file map → search hit → narrow slice; do not pass full corpora or full tool schema when a compact evidence packet is enough.
+- **File/artifact handoff unread**: a file path is not evidence until the receiver records a read-back path, line range, hash, or inspected handle.
+- **Tool-surface/MCP tax**: expose only task-relevant tools and load full schemas lazily after intent/state/risk filtering.
+- **Delegation contract loss**: every subagent packet needs objective, non-goals, allowed surfaces, required sources/files, output schema, verification, risk, and handoff-back fields.
+- **Parallel subagent inconsistency**: parallelize exploration/review first; parallel implementation requires disjoint surfaces, shared state packets, and integration gates.
+- **Multi-agent communication overhead**: pass structured state, claim/evidence maps, failure states, and receipts; keep raw trace for drill-down.
+- **Recursive delegation runaway**: enforce max depth, budget, stop conditions, and no recursive scheduling unless explicitly authorized.
+- **Test overtrust**: agent-generated tests are useful evidence but not final proof; combine them with existing tests, hidden assumptions, diff review, and independent evaluation.
+- **Regression blindness**: every harness/skill/tool/memory/gate change should name expected fixes, at-risk regressions, verification, and rollback.
+- **Final-output-only review**: inspect trajectory exceptions, tool calls, permissions, and side effects, not only the final artifact.
+- **A2A scope creep**: structured handoff requests must validate target, payload, authority, data boundary, and tool inheritance.
+- **Reliability metric flattening**: do not accept a single solve-rate/pass-rate; track consistency, robustness, predictability, safety, latency/cost, and human review load.
+- **Human review bottleneck**: route humans to failed, unknown, high-risk, side-effect, and policy-exception cases; convert repeated review comments into validators.
+- **Final-format extraction failure**: distinguish bad reasoning from malformed output; use schema validation and repair passes when the trace contains enough evidence.
+- **Prompt-only accumulation**: do not keep appending prose instructions; move recurring failures into validators, scripts, skills, references, or eval cases.
 
 ## Commit-scoped delegation anti-patterns
 
