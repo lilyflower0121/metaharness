@@ -1,0 +1,52 @@
+schema: metaharness.validation_receipt.v0
+required:
+  - objective
+  - scope
+  - validation_status
+  - evidence
+  - residual_risks
+
+fields:
+  objective:
+    type: string
+
+  scope:
+    type: object
+    fields:
+      files_changed: list[string]
+      external_actions: list[string]
+      commands_run: list[string]
+
+  validation_status:
+    type: enum
+    values: [confirmed, drift, regression, missing_evidence, blocked]
+
+  evidence:
+    type: list[object]
+    item_fields:
+      claim: string
+      evidence_type: string
+      source: string
+      result: string
+
+  tests_or_checks:
+    type: list[object]
+    item_fields:
+      command_or_method: string
+      result: string
+      notes: string
+
+  residual_risks:
+    type: list[string]
+
+  rollback_path:
+    type: string
+
+  retention_decision:
+    type: object
+    fields:
+      memory: list[string]
+      skill: list[string]
+      eval: list[string]
+      repo_doc: list[string]
+      discard: list[string]

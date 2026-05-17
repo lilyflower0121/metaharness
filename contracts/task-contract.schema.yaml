@@ -1,0 +1,76 @@
+# Draft schema for a metaharness task contract.
+# This file is intentionally simple YAML so it can be adapted to JSON Schema,
+# Pydantic, Zod, or other runtime-specific validators.
+
+schema: metaharness.task_contract.v0
+required:
+  - objective
+  - non_goals
+  - constraints
+  - validation
+  - stop_conditions
+
+fields:
+  objective:
+    type: string
+    description: The frozen task purpose.
+
+  target_user_or_job:
+    type: string
+    description: Who or what the output is for.
+
+  non_goals:
+    type: list[string]
+    description: Things the agent must not optimize for or silently add.
+
+  prohibited_substitutions:
+    type: list[string]
+    description: Nearby outputs that would not satisfy the task.
+
+  constraints:
+    type: object
+    fields:
+      allowed_paths: list[string]
+      allowed_tools: list[string]
+      external_side_effect_policy: string
+      data_classification: string
+      public_repo_policy: string
+      cost_budget: string
+      time_budget: string
+
+  evidence_policy:
+    type: object
+    fields:
+      required_sources: list[string]
+      allowed_context: list[string]
+      weak_sources: list[string]
+      prohibited_sources: list[string]
+
+  risk_tier:
+    type: enum
+    values: [low, medium, high]
+
+  authority:
+    type: object
+    fields:
+      requested_by: string
+      approved_actions: list[string]
+      ambiguous_scope_owner: string
+
+  validation:
+    type: object
+    fields:
+      automated_checks: list[string]
+      manual_checks: list[string]
+      validator_role: string
+      success_criteria: list[string]
+
+  rollback:
+    type: object
+    fields:
+      rollback_path: string
+      irreversible_actions: list[string]
+
+  stop_conditions:
+    type: list[string]
+    description: Conditions that require stopping instead of guessing.
