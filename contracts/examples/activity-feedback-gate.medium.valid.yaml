@@ -1,0 +1,98 @@
+phase: implementation
+risk_tier: medium
+objective: Add an executable validator for metaharness activity/feedback capture packets and wire it into the shared gate suite.
+non_goals:
+  - Do not replace the draft schema with a heavy external dependency.
+  - Do not validate semantic truth of evidence, only structural invariants and public-safety rules.
+  - Do not push or publish externally.
+prohibited_substitutions:
+  - A manual-only checklist without executable validation.
+  - A validator that passes packets with raw public private-content capture.
+  - Runtime-specific logging code.
+constraints:
+  allowed_paths:
+    - scripts/
+    - contracts/
+    - docs/
+    - README.md
+  allowed_tools:
+    - read_file
+    - search_files
+    - write_file
+    - patch
+    - terminal
+  external_side_effect_policy: local git commit only; no push or publication
+  data_classification: public
+  public_repo_policy: generalized validator and fixtures only
+  cost_budget: local-only, no paid services
+  time_budget: bounded same-session update
+lower_bound:
+  design_controls:
+    objective_integrity: implement the previously identified next step, not Hermes runtime logging
+    authority_boundary: local repository edit and commit only
+    data_boundary: validator and fixtures must be public-safe and avoid secrets/private raw traces
+    untrusted_input_boundary: capture packet contents are evidence and must be validated before retention/promotion
+    allowed_surface: changes limited to scripts/contracts/docs/README
+    evidence_lower_bound: validator behavior must be shown by valid and invalid fixtures
+    stop_or_rollback: reversible by git revert or local discard before commit
+    validator_boundary: shared suite and direct validator positive/negative checks must pass
+    supply_chain_boundary: no dependency changes; use existing yaml_compat helper
+    retention_boundary: retain validator, fixtures, docs; discard session noise
+  validation_controls:
+    evidence_receipt: final response includes validator commands, changed files, and commit hash
+    side_effect_readback: git status/log read-back after commit
+    secret_or_private_data_check: secret pattern scan over changed text files
+    changed_surface_check: git status and diff reviewed
+    validator_result: shared suite includes activity_feedback_gate when contract declares activity_feedback_capture packets
+    rollback_or_irreversibility_result: git revert the resulting local commit
+    retention_result: retained as public script/docs/fixtures only
+evidence_policy:
+  required_sources:
+    - contracts/activity-feedback-capture.schema.yaml
+    - contracts/examples/activity-feedback-packet.public.valid.yaml
+    - scripts/run_metaharness.py
+    - scripts/yaml_compat.py
+  allowed_context:
+    - docs/activity-feedback-capture.md
+    - docs/architecture.md
+validation:
+  automated_checks:
+    - python3 scripts/activity_feedback_gate.py --packet contracts/examples/activity-feedback-packet.public.valid.yaml
+    - python3 scripts/activity_feedback_gate.py --packet contracts/examples/activity-feedback-packet.invalid.yaml should fail
+    - python3 scripts/activity_feedback_gate.py --packet contracts/examples/activity-feedback-packet.model-inference-invalid.yaml should fail
+    - python3 scripts/activity_feedback_gate.py --packet contracts/examples/activity-feedback-packet.model-inference-confirmation-invalid.yaml should fail
+    - python3 scripts/run_metaharness.py --contract contracts/examples/activity-feedback-gate.medium.valid.yaml
+    - python3 scripts/run_metaharness.py --contract contracts/examples/activity-feedback-capture.medium.valid.yaml
+  manual_checks:
+    - Confirm the validator checks public/private raw-payload, feedback disposition, accepted requirement validator refs, promotion verification, and retention review status.
+  validator_role: independent reviewer or codegate
+  success_criteria:
+    - Valid packet passes dedicated gate.
+    - Invalid packet fails dedicated gate.
+    - Shared suite invokes dedicated gate through activity_feedback_capture.packets.
+authority:
+  requested_by: hrt
+  approved_actions:
+    - update local metaharness repository files
+    - create a local git commit after checks pass
+  ambiguous_scope_owner: hrt
+rollback:
+  rollback_path: git revert the resulting local commit
+  irreversible_actions: []
+stop_conditions:
+  - Valid packet fails or invalid packet passes.
+  - Shared suite does not invoke activity_feedback_gate for contracts with activity_feedback_capture.packets.
+  - Secret scan fails.
+phase_controls:
+  changed_surfaces:
+    - scripts/
+    - contracts/
+    - docs/
+    - README.md
+  validators:
+    - python3 scripts/run_metaharness.py --contract contracts/examples/activity-feedback-gate.medium.valid.yaml
+  rollback_path: git revert the resulting local commit
+
+activity_feedback_capture:
+  packets:
+    - contracts/examples/activity-feedback-packet.public.valid.yaml

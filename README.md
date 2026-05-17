@@ -81,6 +81,7 @@ Run the structural gates directly with:
 python3 scripts/lb_gate.py --contract <contract.yaml>
 python3 scripts/metaharness_gate.py --risk <low|medium|high> --contract <contract.yaml>
 python3 scripts/phase_risk_gate.py --contract <contract.yaml>
+python3 scripts/activity_feedback_gate.py --packet <activity-feedback-packet.yaml>
 python3 scripts/commit_scope_audit.py --base main --head HEAD --json
 ```
 

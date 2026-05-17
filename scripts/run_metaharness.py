@@ -17,6 +17,18 @@ ROOT = Path(__file__).resolve().parents[1]
 def has_section(data: dict, key: str) -> bool:
     return isinstance(data.get(key), dict) and bool(data[key])
 
+
+def activity_feedback_packets(data: dict) -> list[str]:
+    section = data.get("activity_feedback_capture")
+    if not isinstance(section, dict):
+        return []
+    packets = section.get("packets") or section.get("packet") or []
+    if isinstance(packets, str):
+        return [packets]
+    if isinstance(packets, list):
+        return [str(p) for p in packets if str(p).strip()]
+    return []
+
 def run(cmd: list[str]) -> dict:
     proc = subprocess.run(cmd, cwd=ROOT, text=True, capture_output=True)
     return {
@@ -55,6 +67,8 @@ def main() -> int:
     ]
     if has_section(data, "artifact_flow"):
         commands.append([sys.executable, "scripts/artifact_flow_gate.py", "--contract", rel])
+    for packet in activity_feedback_packets(data):
+        commands.append([sys.executable, "scripts/activity_feedback_gate.py", "--packet", packet])
 
     results = [run(cmd) for cmd in commands]
     ok = all(r["exit_code"] == 0 for r in results)

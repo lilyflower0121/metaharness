@@ -58,6 +58,7 @@ evidence_policy:
 validation:
   automated_checks:
     - python3 scripts/run_metaharness.py --contract contracts/examples/activity-feedback-capture.medium.valid.yaml
+    - python3 scripts/activity_feedback_gate.py --packet contracts/examples/activity-feedback-packet.public.valid.yaml
     - python3 - <<'PY'\nfrom pathlib import Path\nfor p in ['contracts/activity-feedback-capture.schema.yaml','contracts/examples/activity-feedback-capture.medium.valid.yaml']:\n    assert Path(p).exists(), p\nprint('activity feedback files present')\nPY
   manual_checks:
     - Confirm schema avoids raw secret/private data capture by default.
@@ -90,3 +91,7 @@ phase_controls:
   validators:
     - python3 scripts/run_metaharness.py --contract contracts/examples/activity-feedback-capture.medium.valid.yaml
   rollback_path: git revert the resulting local commit
+
+activity_feedback_capture:
+  packets:
+    - contracts/examples/activity-feedback-packet.public.valid.yaml

@@ -1,0 +1,50 @@
+schema: metaharness.activity_feedback_capture.v0
+run:
+  run_id: invalid_model_inference_no_confirmation
+  task_contract_ref: contracts/examples/activity-feedback-gate.medium.valid.yaml
+  phase: implementation
+  risk_tier: medium
+  actor_role: executor
+  runtime: portable-agent
+  started_at: "2026-05-17T00:00:00Z"
+  status: succeeded
+privacy:
+  data_classification: public
+  raw_private_content_stored: false
+  secrets_stored: false
+  redaction_status: not_needed
+  evidence_access_model: repository_inherited
+  retention_ttl: test fixture
+events:
+  - event_id: evt_001
+    timestamp: "2026-05-17T00:01:00Z"
+    actor_role: executor
+    event_type: validation
+    action_summary: Model inferred a requirement from a trace.
+    status: succeeded
+    raw_payload_stored: false
+feedback:
+  - feedback_id: fb_001
+    timestamp: "2026-05-17T00:02:00Z"
+    source_type: model_inference
+    authority: weak_signal
+    summary: Inferred requirement without confirmation.
+    disposition: accepted
+requirement_deltas:
+  - delta_id: delta_001
+    source_feedback_ids:
+      - fb_001
+    classification: accepted_requirement
+    statement: Promote model inference as an accepted requirement without confirmation.
+    status: accepted
+    evidence_refs:
+      - fb_001
+    validator_refs:
+      - scripts/activity_feedback_gate.py
+retention:
+  keep_refs:
+    - contracts/examples/activity-feedback-packet.model-inference-confirmation-invalid.yaml
+  discard_refs:
+    - unconfirmed model inference
+  retention_reason: Negative fixture for model-inference confirmation checks.
+  review_status: reviewed

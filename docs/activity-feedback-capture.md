@@ -97,4 +97,12 @@ A task using activity/feedback capture should fail review if:
 
 ## Minimal public example
 
-See `contracts/examples/activity-feedback-capture.medium.valid.yaml` for the repository-update contract, `contracts/examples/activity-feedback-packet.public.valid.yaml` for a public-safe capture packet, and `contracts/activity-feedback-capture.schema.yaml` for the packet shape.
+See `contracts/examples/activity-feedback-capture.medium.valid.yaml` for the repository-update contract, `contracts/examples/activity-feedback-packet.public.valid.yaml` for a public-safe capture packet, `contracts/examples/activity-feedback-packet.invalid.yaml`, `contracts/examples/activity-feedback-packet.model-inference-invalid.yaml`, and `contracts/examples/activity-feedback-packet.model-inference-confirmation-invalid.yaml` for negative fixtures, and `contracts/activity-feedback-capture.schema.yaml` for the packet shape.
+
+Validate packets directly with:
+
+```bash
+python3 scripts/activity_feedback_gate.py --packet contracts/examples/activity-feedback-packet.public.valid.yaml
+```
+
+Contracts may also declare `activity_feedback_capture.packets`; `scripts/run_metaharness.py` will invoke the packet gate as part of the shared suite.

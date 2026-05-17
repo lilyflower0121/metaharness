@@ -1,0 +1,53 @@
+schema: metaharness.activity_feedback_capture.v0
+run:
+  run_id: invalid_public_raw_trace
+  task_contract_ref: contracts/examples/activity-feedback-gate.medium.valid.yaml
+  phase: implementation
+  risk_tier: medium
+  actor_role: executor
+  runtime: portable-agent
+  started_at: "2026-05-17T00:00:00Z"
+  status: succeeded
+privacy:
+  data_classification: public
+  raw_private_content_stored: true
+  secrets_stored: false
+  redaction_status: failed
+  evidence_access_model: repository_inherited
+  retention_ttl: forever
+events:
+  - event_id: evt_001
+    timestamp: "2026-05-17T00:01:00Z"
+    actor_role: executor
+    event_type: tool_call
+    action_summary: Stored raw tool output in a public packet.
+    status: succeeded
+    raw_payload_stored: true
+feedback:
+  - feedback_id: fb_001
+    timestamp: "2026-05-17T00:02:00Z"
+    source_type: external_message
+    authority: approval
+    summary: Please change the policy.
+    disposition: accepted
+requirement_deltas:
+  - delta_id: delta_001
+    source_feedback_ids:
+      - fb_001
+    classification: accepted_requirement
+    statement: Change policy based only on external message.
+    status: accepted
+promotions:
+  - promotion_id: promo_001
+    source_delta_ids:
+      - delta_missing
+    target_type: validator
+    target_ref: scripts/activity_feedback_gate.py
+    verification: ""
+    status: completed
+retention:
+  keep_refs:
+    - raw transcript
+  discard_refs: []
+  retention_reason: ""
+  review_status: unreviewed
