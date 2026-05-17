@@ -2,7 +2,9 @@
 """Validate metaharness skill frontmatter and executable support-file presence."""
 from __future__ import annotations
 from pathlib import Path
-import re, sys, yaml
+import re, sys
+sys.path.insert(0, str(Path(__file__).resolve().parents[3] / "scripts"))
+from yaml_compat import load_text
 
 def main() -> int:
     root=Path(__file__).resolve().parents[3]
@@ -16,7 +18,7 @@ def main() -> int:
         if not m:
             errors.append(f'{p}: unclosed frontmatter')
             continue
-        fm=yaml.safe_load(text[3:m.start()+3])
+        fm=load_text(text[3:m.start()+3])
         if not isinstance(fm, dict) or not fm.get('name') or not fm.get('description'):
             errors.append(f'{p}: missing name/description')
         if len(fm.get('description',''))>1024:

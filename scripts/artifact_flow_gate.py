@@ -4,11 +4,7 @@ from __future__ import annotations
 import argparse, sys
 from pathlib import Path
 from typing import Any
-try:
-    import yaml
-except Exception as exc:
-    print(f"ERROR: PyYAML is required: {exc}", file=sys.stderr)
-    sys.exit(2)
+from yaml_compat import load_path
 
 REQUIRED = ['artifact_type', 'target_users', 'deliverables', 'build_steps', 'validators', 'acceptance_receipt']
 
@@ -25,7 +21,7 @@ def main() -> int:
     ap.add_argument('--contract', type=Path, required=True)
     ns = ap.parse_args()
     try:
-        data = yaml.safe_load(ns.contract.read_text(encoding='utf-8'))
+        data = load_path(ns.contract)
     except Exception as exc:
         print(f'ARTIFACT GATE FAIL: could not read contract: {exc}')
         return 2

@@ -1,0 +1,22 @@
+phase: mvp_exploration
+risk_tier: low
+objective: Explore whether a small prototype can clarify user requirements.
+non_goals:
+  - Do not publish or merge production changes.
+constraints:
+  external_side_effect_policy: none
+evidence_policy:
+  required_sources:
+    - user feedback
+validation:
+  success_criteria:
+    - Feedback items are classified.
+stop_conditions:
+  - Prototype requires external publication.
+phase_controls:
+  learning_goals:
+    - Identify terminology and workflow gaps.
+  feedback_items:
+    - Classify comments as requirement candidate, bug, preference, non-goal, or rejected inference.
+  non_goal_checks:
+    - Confirm prototype details are not automatically accepted requirements.

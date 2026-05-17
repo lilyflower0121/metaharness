@@ -13,11 +13,7 @@ import sys
 from pathlib import Path
 from typing import Any
 
-try:
-    import yaml
-except Exception as exc:  # pragma: no cover
-    print(f"ERROR: PyYAML is required: {exc}", file=sys.stderr)
-    sys.exit(2)
+from yaml_compat import load_path
 
 RISK_ORDER = {"low": 1, "medium": 2, "high": 3}
 
@@ -47,8 +43,7 @@ HIGH_REQUIRED = MEDIUM_REQUIRED + [
 
 
 def load_yaml(path: Path) -> dict[str, Any]:
-    with path.open("r", encoding="utf-8") as f:
-        data = yaml.safe_load(f)
+    data = load_path(path)
     if not isinstance(data, dict):
         raise ValueError("contract root must be a mapping")
     return data

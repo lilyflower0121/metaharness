@@ -1,0 +1,46 @@
+phase: release
+risk_tier: high
+objective: Publish an approved artifact to an external target.
+non_goals:
+  - Do not change credentials or permissions.
+prohibited_substitutions:
+  - Do not treat local tests as publication read-back.
+constraints:
+  allowed_paths:
+    - dist/
+    - docs/
+  allowed_tools:
+    - git
+    - gh
+  external_side_effect_policy: explicit approved release target only
+  data_classification: public
+evidence_policy:
+  required_sources:
+    - approval record
+    - release artifact checksum
+    - read-back URL
+validation:
+  automated_checks:
+    - python3 scripts/phase_risk_gate.py --contract contracts/examples/release.high.valid.yaml
+  manual_checks:
+    - Confirm target and approval.
+  validator_role: independent validator
+  success_criteria:
+    - Durable target is read back.
+authority:
+  requested_by: authorized maintainer
+  approved_actions:
+    - publish named artifact to named target
+  ambiguous_scope_owner: requester
+rollback:
+  rollback_path: remove release or publish rollback commit
+stop_conditions:
+  - Approval or target is ambiguous.
+phase_controls:
+  authority:
+    - authorized maintainer approved named target
+  release_targets:
+    - named external release target
+  readback_plan:
+    - Fetch release URL and compare artifact identity.
+  rollback_path: remove release or publish rollback commit

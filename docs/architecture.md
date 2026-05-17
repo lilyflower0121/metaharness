@@ -88,6 +88,8 @@ For non-trivial work, the executor should not be the final certifier of its own 
 
 For code-development or artifact-construction work, the shared `artifact-build-flow-harness` layer owns the common flow: artifact design packet, build plan, bounded execution, validator suite, receipt, and retention. Risk-tier skills then add low/medium/high strictness.
 
+For lifecycle control, `phase-risk-gate-harness` chooses different gates for exploration, MVP exploration, specification, implementation, merge, release, operate, and retention. This keeps early discovery fast while making merge/release/operation gates stricter.
+
 ## Layer 5: Validator Compilation Layer
 
 Convert accepted requirements into checks whenever possible.

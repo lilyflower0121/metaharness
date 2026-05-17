@@ -1,0 +1,24 @@
+phase: mvp_exploration
+risk_tier: low
+objective: Explore and publish prototype.
+non_goals:
+  - none
+constraints:
+  external_side_effect_policy: none
+evidence_policy:
+  required_sources:
+    - user feedback
+validation:
+  success_criteria:
+    - something learned
+stop_conditions:
+  - none
+phase_controls:
+  learning_goals:
+    - learn
+  feedback_items:
+    - TBD
+  non_goal_checks:
+    - TBD
+  release_targets:
+    - production

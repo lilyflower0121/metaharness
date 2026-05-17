@@ -1,0 +1,37 @@
+phase: specification
+risk_tier: medium
+objective: Freeze requirements before implementation.
+non_goals:
+  - Do not implement before validators are mapped.
+prohibited_substitutions:
+  - Do not replace validator mapping with prose-only acceptance.
+constraints:
+  allowed_paths:
+    - docs/
+    - contracts/
+  allowed_tools:
+    - write_file
+  external_side_effect_policy: bounded repository/local changes only
+  data_classification: public
+evidence_policy:
+  required_sources:
+    - user request
+    - existing contract
+validation:
+  automated_checks:
+    - python3 scripts/phase_risk_gate.py --contract contracts/examples/specification.medium.valid.yaml
+  manual_checks:
+    - Review requirement-validator map.
+  validator_role: independent reviewer
+  success_criteria:
+    - Every accepted requirement has a validator or manual check.
+rollback:
+  rollback_path: git revert the spec commit
+stop_conditions:
+  - Blocking ambiguity remains.
+phase_controls:
+  requirement_validator_map:
+    - requirement: Accepted requirements must map to checks.
+      validator: phase_risk_gate plus manual review.
+  open_questions:
+    - none

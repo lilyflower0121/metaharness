@@ -1,0 +1,39 @@
+phase: merge
+risk_tier: medium
+objective: Merge a bounded documentation and validator update.
+non_goals:
+  - Do not publish a release.
+prohibited_substitutions:
+  - Do not treat executor summary as validation.
+constraints:
+  allowed_paths:
+    - docs/
+    - skills/
+    - scripts/
+    - contracts/
+  allowed_tools:
+    - git
+    - python3
+  external_side_effect_policy: push to branch/main after checks only
+  data_classification: public
+evidence_policy:
+  required_sources:
+    - git diff
+    - validator output
+validation:
+  automated_checks:
+    - python3 scripts/phase_risk_gate.py --contract contracts/examples/merge.medium.valid.yaml
+  manual_checks:
+    - Independent validation of changed files.
+  validator_role: independent validator
+  success_criteria:
+    - Phase gate and risk gate pass.
+rollback:
+  rollback_path: git revert the merge commit
+stop_conditions:
+  - Independent validation is missing.
+phase_controls:
+  independent_validation:
+    - Validator output inspected separately from executor summary.
+  receipt_path: final response or validation receipt file
+  clean_status_check: git status --short
