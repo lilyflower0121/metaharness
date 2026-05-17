@@ -121,11 +121,19 @@ def add_pattern_escalators(audit: Audit) -> None:
 
 
 def add_diff_escalators(audit: Audit, diff: str) -> None:
+    current_file = ""
     for line in diff.splitlines():
+        if line.startswith("+++ b/"):
+            current_file = line.removeprefix("+++ b/")
+            continue
+        if line.startswith("--- a/"):
+            continue
+        if not TEST_PATH.search(current_file):
+            continue
         if TEST_WEAKENING_ADDED.search(line) or TEST_ASSERTION_REMOVED.search(line):
             audit.test_weakening = True
             audit.escalators.add("test_weakening_detected")
-            audit.rationale.append("test weakening signal in diff")
+            audit.rationale.append(f"test weakening signal in diff: {current_file}")
             return
 
 
