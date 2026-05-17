@@ -22,6 +22,8 @@ Metaharness is **not** a prompt dump. It is an architecture for binding agent ex
 
 ```text
 metaharness/
+  AGENTS.md    Generic repo-root instructions for any agent runtime
+  .agent/      Cross-runtime resolver and routing index
   adapters/    Thin runtime adapters for Claude Code, Codex, Hermes Agent
   io/          Static IO publishing templates for human-reviewable gate receipts
   principles/   Human-readable design principles
@@ -76,7 +78,7 @@ python3 scripts/phase_risk_gate.py --contract <contract.yaml>
 python3 scripts/commit_scope_audit.py --base main --head HEAD --json
 ```
 
-For Claude Code, Codex, Hermes Agent, and other agent runtimes, prefer the portable suite entrypoint:
+For Claude Code, Codex, Hermes Agent, and other agent runtimes, start from `AGENTS.md` and `.agent/RESOLVER.md`, then prefer the portable suite entrypoint:
 
 ```bash
 python3 scripts/run_metaharness.py --contract <contract.yaml>

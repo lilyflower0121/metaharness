@@ -4,6 +4,8 @@ This repository uses metaharness for risk- and phase-based autonomous-agent gate
 
 ## Core rule
 
+Start from repo-root `AGENTS.md`, then read `.agent/RESOLVER.md` to resolve task mode, risk, phase, contract need, and validator route.
+
 Do not treat this file as the policy source of truth. The shared harness lives in:
 
 - `contracts/`

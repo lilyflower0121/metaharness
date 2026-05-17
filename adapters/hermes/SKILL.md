@@ -21,16 +21,17 @@ Use for tasks involving:
 
 ## Workflow
 
-1. Determine whether a contract is required.
-2. If required, create or update a contract under `contracts/`.
-3. Run:
+1. Read repo-root `AGENTS.md`, then `.agent/RESOLVER.md` to resolve task mode, risk, phase, contract need, and validator route.
+2. Determine whether a contract is required.
+3. If required, create or update a contract under `contracts/`.
+4. Run:
 
 ```bash
 python3 scripts/run_metaharness.py --contract <contract.yaml>
 ```
 
-4. Do not claim completion if the gate fails.
-5. Final response includes contract path, risk tier, phase, validators, status, and residual risks.
+5. Do not claim completion if the gate fails.
+6. Final response includes contract path, risk tier, phase, validators, status, and residual risks.
 
 ## Authority
 

@@ -6,10 +6,12 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 REQUIRED = {
-    "adapters/claude/CLAUDE.md": ["python3 scripts/run_metaharness.py --contract", "contract path", "risk tier", "phase"],
+    "AGENTS.md": [".agent/RESOLVER.md", "python3 scripts/run_metaharness.py --contract", "commit_scope_audit.py", "Final response receipt"],
+    ".agent/RESOLVER.md": ["Task-mode router", "Risk-tier resolver", "Validator command resolver", "Adapter invariant"],
+    "adapters/claude/CLAUDE.md": [".agent/RESOLVER.md", "python3 scripts/run_metaharness.py --contract", "contract path", "risk tier", "phase"],
     "adapters/claude/commands/metaharness-gate.md": ["$ARGUMENTS", "run_metaharness.py"],
-    "adapters/codex/AGENTS.md": ["python3 scripts/run_metaharness.py --contract", "Codex", "contract"],
-    "adapters/hermes/SKILL.md": ["name: metaharness-portable-agent-adapter", "python3 scripts/run_metaharness.py --contract"],
+    "adapters/codex/AGENTS.md": [".agent/RESOLVER.md", "python3 scripts/run_metaharness.py --contract", "Codex", "contract"],
+    "adapters/hermes/SKILL.md": ["name: metaharness-portable-agent-adapter", ".agent/RESOLVER.md", "python3 scripts/run_metaharness.py --contract"],
     "skills/portable-agent-adapter-harness/SKILL.md": ["portable-agent-adapter-harness", "scripts/check_agent_adapters.py"],
 }
 FORBIDDEN = ["ANTHROPIC" + "_API_KEY", "OPENAI" + "_API_KEY", "password" + "=", "token" + "="]

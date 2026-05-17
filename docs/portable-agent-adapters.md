@@ -5,9 +5,21 @@ Metaharness must be reusable across Claude Code, Codex, Hermes Agent, and other 
 The portable contract is:
 
 1. Keep the source-of-truth rules in normal repo files: `contracts/`, `docs/`, `skills/`, and `scripts/`.
-2. Give each agent a thin adapter that points to the same scripts and contract fields.
-3. Do not duplicate policy logic inside each agent prompt. Prompts route to executable gates.
-4. Treat agent-specific files as adapters, not as the harness itself.
+2. Keep repo-root `AGENTS.md` and `.agent/RESOLVER.md` as the cross-runtime routing entrypoint.
+3. Give each agent a thin adapter that points to the same scripts and contract fields.
+4. Do not duplicate policy logic inside each agent prompt. Prompts route to executable gates.
+5. Treat agent-specific files as adapters, not as the harness itself.
+
+## Universal resolver
+
+Any agent that can read normal repository files should start with:
+
+```text
+AGENTS.md
+.agent/RESOLVER.md
+```
+
+`AGENTS.md` is the generic adapter. `.agent/RESOLVER.md` maps task mode, risk tier, lifecycle phase, contract need, and validator route. Vendor-specific adapters should point back to these files rather than restating policy.
 
 ## Adapter targets
 
@@ -76,6 +88,7 @@ Future validators should be added through a manifest rather than per-agent prose
 Agent-specific instruction files are always at risk of drifting apart. Keep them thin:
 
 - explain when to invoke metaharness;
+- point to `AGENTS.md` and `.agent/RESOLVER.md`;
 - require the shared command;
 - require receipts/evidence;
 - do not restate the entire policy.

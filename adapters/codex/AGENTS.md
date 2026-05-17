@@ -4,6 +4,8 @@ This repository uses metaharness to gate autonomous coding-agent work.
 
 ## Source of truth
 
+Start from repo-root `AGENTS.md`, then read `.agent/RESOLVER.md` to resolve task mode, risk, phase, contract need, and validator route.
+
 Shared policy and validators live in:
 
 - `contracts/`
