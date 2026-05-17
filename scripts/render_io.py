@@ -3,8 +3,8 @@
 
 The renderer consumes a task contract plus a JSON receipt produced by
 `scripts/run_metaharness.py --json`. It writes static, escaped HTML plus sanitized
-JSON files. It does not publish to a remote host; repository or Pages visibility
-is the access-control boundary.
+JSON files. It does not publish to a remote host; repository permissions are the
+access-control boundary. IO contracts must use access_model=repository_inherited.
 """
 from __future__ import annotations
 
@@ -122,12 +122,12 @@ def render_html(contract: dict[str, Any], receipt: dict[str, Any], generated_at:
 <body>
 <header>
   <h1>Metaharness IO Receipt</h1>
-  <p class="muted">Generated {html.escape(generated_at)}. Static review artifact; hosting permissions define who can view it.</p>
+  <p class="muted">Generated {html.escape(generated_at)}. Static review artifact; repository permissions define who can view it.</p>
 </header>
 <section class="grid">
   <div class="card"><strong>Status</strong><br><span class="status {html.escape(str(receipt.get('status', 'unknown')))}">{html.escape(str(receipt.get('status', 'unknown')).upper())}</span></div>
   <div class="card"><strong>Phase / Risk</strong><br>{html.escape(str(receipt.get('phase') or contract.get('phase')))} / {html.escape(str(receipt.get('risk_tier') or contract.get('risk_tier')))}</div>
-  <div class="card"><strong>Visibility</strong><br>{html.escape(str(pub.get('visibility', 'unspecified')))}</div>
+  <div class="card"><strong>Access Model</strong><br>{html.escape(str(pub.get('access_model', 'unspecified')))}</div>
   <div class="card"><strong>Contract</strong><br><code>{html.escape(str(receipt.get('contract', 'unknown')))}</code></div>
 </section>
 <section>
@@ -159,7 +159,7 @@ def render_html(contract: dict[str, Any], receipt: dict[str, Any], generated_at:
   <h2>Review Checklist</h2>
   <ul>
     <li>Does the status match the validator outputs?</li>
-    <li>Is the visibility appropriate for the data classification?</li>
+    <li>Is the IO access model repository_inherited and target repository-synchronized?</li>
     <li>Are side effects backed by authority and read-back?</li>
     <li>Are residual risks and retention boundaries acceptable?</li>
   </ul>
@@ -195,16 +195,23 @@ def main() -> int:
     pub = contract.get("io_publication")
     if not isinstance(pub, dict):
         return fail("contract missing io_publication section")
-    visibility = str(pub.get("visibility", "")).lower()
-    if visibility not in {"public", "private", "internal"}:
-        return fail("io_publication.visibility must be public, private, or internal")
+    access_model = str(pub.get("access_model", "")).lower()
+    if access_model != "repository_inherited":
+        return fail("io_publication.access_model must be repository_inherited")
+    if "visibility" in pub:
+        return fail("io_publication.visibility is not allowed; IO access must inherit repository permissions")
+    target = str(pub.get("publish_target", "")).lower()
+    allowed_targets = {"same_repository_pages", "same_repository_artifact", "repository_attached_artifact"}
+    if target not in allowed_targets:
+        return fail("io_publication.publish_target must be repository-synchronized")
+    audience = pub.get("audience")
+    if not isinstance(audience, list) or "repository_readers" not in {str(x) for x in audience}:
+        return fail("io_publication.audience must include repository_readers")
     if receipt.get("status") != "pass" and not args.allow_failed:
-        return fail("receipt status is not pass; use --allow-failed only for private debugging")
-    data_class = flatten(contract.get("constraints", {}).get("data_classification", "")).lower()
+        return fail("receipt status is not pass; use --allow-failed only for repository-internal debugging")
     redactions = {str(x).lower() for x in pub.get("redact", [])} if isinstance(pub.get("redact"), list) else set()
-    if visibility == "public" and data_class not in {"public", "public-safe", "public_safe"}:
-        if not {"private_data", "secrets"}.issubset(redactions):
-            return fail("public IO requires public data classification or explicit private_data+secrets redaction")
+    if not {"private_data", "secrets", "absolute_local_paths"}.issubset(redactions):
+        return fail("IO publication must redact secrets, private_data, and absolute_local_paths")
     blockers = scan_for_blockers(contract) + scan_for_blockers(receipt)
     if blockers:
         return fail("; ".join(blockers))
@@ -224,7 +231,7 @@ def main() -> int:
     (out_dir / "receipt.json").write_text(json.dumps(sanitized_receipt, indent=2, ensure_ascii=False))
     (out_dir / "contract.redacted.json").write_text(json.dumps(sanitized_contract, indent=2, ensure_ascii=False))
     (out_dir / "README.txt").write_text(
-        "Metaharness IO bundle. Review index.html first. Hosting/repository visibility controls access.\n"
+        "Metaharness IO bundle. Review index.html first. Repository permissions control access.\n"
     )
     print(f"IO RENDER PASS: {out_dir}")
     return 0

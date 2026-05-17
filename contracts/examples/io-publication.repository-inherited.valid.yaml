@@ -1,15 +1,15 @@
 phase: merge
 risk_tier: medium
-objective: Publish a human-reviewable IO bundle for a passed metaharness gate receipt.
+objective: Publish a repository-permission-inherited human-reviewable IO bundle for a passed metaharness gate receipt.
 non_goals:
   - Do not publish secrets, private data, raw private logs, or unrestricted terminal dumps.
-  - Do not make private repository evidence public.
+  - Do not let the task choose visibility independently from repository permissions.
 prohibited_substitutions:
   - Do not treat a pretty HTML page as a validation result.
   - Do not publish failed gates as passed gates.
 constraints:
-  external_side_effect_policy: public static IO may be generated only from public-safe contract fields and sanitized receipts
-  data_classification: public
+  external_side_effect_policy: repository-scoped static IO may be generated only as a repository-inherited review artifact
+  data_classification: repository-internal review data
   allowed_paths:
     - docs/
     - io/
@@ -21,8 +21,8 @@ constraints:
 lower_bound:
   design_controls:
     objective_integrity: publish gate receipts for human review, not as a substitute for gate execution
-    authority_boundary: publishing public IO requires maintainer request and public-safe source material
-    data_boundary: public IO includes only public-safe contract metadata and sanitized validator output
+    authority_boundary: publishing IO requires maintainer request and a repository-synchronized target
+    data_boundary: IO includes only repository-scoped contract metadata and sanitized validator output
     untrusted_input_boundary: receipt and contract are rendered as escaped text, never executable HTML or script
     allowed_surface: renderer writes only to the requested output directory
     evidence_lower_bound: IO page must include receipt schema, gate status, validator list, and contract path
@@ -41,15 +41,15 @@ lower_bound:
 authority:
   requested_by: repository maintainer or task owner
   approved_actions:
-    - generate and optionally publish sanitized IO pages to the configured visibility-matched host
+    - generate and optionally publish sanitized IO pages to the same repository permission boundary
   ambiguous_scope_owner: requester
 io_publication:
-  visibility: public
+  access_model: repository_inherited
   audience:
+    - repository_readers
     - maintainers
     - reviewers
-    - external readers
-  publish_target: static site or GitHub Pages repository with matching visibility
+  publish_target: same_repository_pages
   include:
     - gate_summary
     - validator_outputs
@@ -83,7 +83,7 @@ artifact_flow:
   acceptance_receipt:
     - rendered index.html exists
     - receipt.json exists
-    - public/private visibility stated
+    - repository-inherited access model stated
 phase_controls:
   independent_validation:
     - run_metaharness suite checks LB, risk, phase, and artifact gates
@@ -102,11 +102,11 @@ validation:
     - render_io generates index.html and sanitized JSON files
     - generated IO contains no secret-like markers
   automated_checks:
-    - python3 scripts/run_metaharness.py --contract contracts/examples/io-publication.public.valid.yaml
-    - python3 scripts/render_io.py --contract contracts/examples/io-publication.public.valid.yaml --receipt receipt.json --out /tmp/metaharness-io
+    - python3 scripts/run_metaharness.py --contract contracts/examples/io-publication.repository-inherited.valid.yaml
+    - python3 scripts/render_io.py --contract contracts/examples/io-publication.repository-inherited.valid.yaml --receipt receipt.json --out /tmp/metaharness-io
   checks:
-    - python3 scripts/run_metaharness.py --contract contracts/examples/io-publication.public.valid.yaml
-    - python3 scripts/render_io.py --contract contracts/examples/io-publication.public.valid.yaml --receipt receipt.json --out /tmp/metaharness-io
+    - python3 scripts/run_metaharness.py --contract contracts/examples/io-publication.repository-inherited.valid.yaml
+    - python3 scripts/render_io.py --contract contracts/examples/io-publication.repository-inherited.valid.yaml --receipt receipt.json --out /tmp/metaharness-io
   receipt_required: true
 evidence_policy:
   required_sources:
@@ -117,8 +117,8 @@ evidence_policy:
     - narrative summary without receipt JSON
 stop_conditions:
   - receipt status is not pass
-  - io_publication visibility is missing
-  - public output contains private data, secrets, or absolute local paths
+  - io_publication access_model is not repository_inherited
+  - IO output contains secrets or absolute local paths
 rollback:
   rollback_path: delete generated IO directory or revert publication commit
 retention:

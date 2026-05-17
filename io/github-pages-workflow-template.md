@@ -1,6 +1,6 @@
-# GitHub Pages IO Publisher Template
+# Repository-Inherited IO Publisher Template
 
-This is a reference workflow, not enabled by default. Copy it into `.github/workflows/publish-io.yml` only after deciding whether the IO host should be public, private, or internal.
+This is a reference workflow, not enabled by default. Copy it into `.github/workflows/publish-io.yml` only when the generated Pages/artifact will inherit the same repository access boundary as the source repository.
 
 ```yaml
 name: publish metaharness io
@@ -11,7 +11,7 @@ on:
       contract:
         description: Contract path
         required: true
-        default: contracts/examples/io-publication.public.valid.yaml
+        default: contracts/examples/io-publication.repository-inherited.valid.yaml
 
 permissions:
   contents: read
@@ -48,6 +48,7 @@ jobs:
 
 Security notes:
 
-- Do not enable this in a public repo for private contracts or private evidence.
-- Use a private/internal repository for private IO.
-- Keep `scripts/render_io.py` in the source repo so public/private hosts use the same sanitizer and receipt format.
+- IO contracts must use `io_publication.access_model: repository_inherited`.
+- Do not use a separate public IO repository for private source repositories.
+- If the review audience is narrower or broader than the source repository readers, change the repository/artifact host first; do not encode ad-hoc visibility in the task contract.
+- Keep `scripts/render_io.py` in the source repo so every host uses the same sanitizer and receipt format.

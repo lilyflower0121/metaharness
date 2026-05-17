@@ -1,31 +1,31 @@
 # Metaharness IO Publishing
 
-Metaharness IO is a companion publication surface for gate receipts and inspected evidence. It is derived from a metaharness-enabled repository, but it should contain **reviewable outputs**, not the entire working context.
+Metaharness IO is a companion review surface for gate receipts and inspected evidence. It is derived from a metaharness-enabled repository and should contain **reviewable outputs**, not the entire working context.
 
 ## Purpose
 
-Use IO when humans need to review what an agent did and why a harness gate passed:
+Use IO when humans with repository access need to review what an agent did and why a harness gate passed:
 
 - task objective, phase, and risk tier;
 - LB / risk / phase / artifact gate results;
 - commands that were run and their pass/fail status;
 - evidence pointers and validation receipts;
 - residual risk and retention notes;
-- explicit publication visibility.
+- repository-bound access policy.
 
-The IO surface is intentionally static. A static bundle can be hosted by GitHub Pages, a private repository Pages site, an internal docs server, or attached to a PR/release artifact.
+The IO surface is intentionally static. It can be hosted by same-repository Pages, a repository-attached artifact, or an internal docs target that mirrors repository permissions.
 
-## Visibility model
+## Access model
 
-IO does not make a private review public by itself. Visibility is inherited from where the generated site is hosted.
+Metaharness IO is **repository-permission inherited**. A task contract must not choose arbitrary `public`, `private`, or `internal` visibility. The view audience is the repository readers/reviewers for the source repository.
 
-| Source/work repo | IO host | Who can view |
+| Source/work repo | Allowed IO host | Who can view |
 | --- | --- | --- |
-| public repo | public Pages/repo | everyone |
-| private repo | private/internal Pages/repo or CI artifact | only people with that access |
-| public repo with private evidence | private IO host, public-safe redacted summary only | depends on IO host |
+| public repo | same-repo Pages or same-repo artifact | same as repository readers: everyone |
+| private repo | same-repo private/internal Pages or repository-attached artifact | users with repository access |
+| internal enterprise repo | same-repo/internal Pages or artifact | organization/internal readers |
 
-Rule: **never rely on the renderer to enforce access control**. The renderer redacts and blocks obvious leaks, but repository or hosting permissions are the authorization boundary.
+Rule: **do not give agents freedom to select a wider or different publication target**. The renderer checks the contract declares `access_model: repository_inherited`; the actual access-control boundary remains the repository or artifact host.
 
 ## Contract section
 
@@ -33,11 +33,12 @@ A task that will publish IO should add:
 
 ```yaml
 io_publication:
-  visibility: public        # public | private | internal
+  access_model: repository_inherited
   audience:
+    - repository_readers
     - maintainers
     - reviewers
-  publish_target: docs-site-or-pages-repo
+  publish_target: same_repository_pages   # same_repository_pages | same_repository_artifact | repository_attached_artifact
   include:
     - gate_summary
     - validator_outputs
@@ -49,10 +50,10 @@ io_publication:
     - absolute_local_paths
   human_review:
     required: true
-    reviewer_role: maintainer_or_authorized_reviewer
+    reviewer_role: repository_reader_or_maintainer
 ```
 
-For public IO, `constraints.data_classification` should be public or explicitly redacted. For private IO, the host repository or artifact store must be private/internal.
+`visibility` is intentionally absent. Repository permissions define visibility. If a different audience is needed, create or choose a repository/artifact host with the desired permissions first, then publish IO there.
 
 ## Generation flow
 
@@ -71,11 +72,11 @@ python3 scripts/render_io.py \
   --out site/io/<task-id>
 ```
 
-3. Publish the generated directory through the chosen host:
+3. Attach or publish the generated directory through a repository-synchronized target:
 
-- public GitHub Pages for public material;
-- private repository Pages / internal docs for private material;
-- CI artifact for review-only material.
+- same repository Pages;
+- same repository CI artifact;
+- internal docs target whose ACL mirrors the source repository.
 
 ## Required properties
 
@@ -84,15 +85,16 @@ An IO bundle must be:
 - **reviewable**: a human can see which gates ran and which evidence was checked;
 - **bounded**: it does not dump raw logs or secrets by default;
 - **traceable**: links back to contract path, receipt schema, commit, and validator names;
-- **visibility-aware**: public/private/internal is explicit;
+- **repository-scoped**: access model is inherited from the source repository, not chosen per task;
 - **static**: no remote JS, no external analytics, no hidden network calls.
 
 ## Non-goals
 
-- IO is not a replacement for access control.
+- IO is not a replacement for repository access control.
 - IO is not a complete audit log for every token or tool call.
 - IO does not prove semantic correctness; it publishes gate evidence for review.
-- IO should not store credentials, private chat logs, customer data, or full raw terminal dumps unless a private host and explicit authority exist.
+- IO must not publish credentials, private chat logs, customer data, or full raw terminal dumps outside the repository-synchronized review boundary.
+- IO must not be used as a general public marketing site unless the repository itself is public and the receipt is public-safe.
 
 ## Repository layout options
 
@@ -102,10 +104,7 @@ Recommended patterns:
 metaharness/                 # rules, contracts, gates
   scripts/render_io.py
   docs/io-publishing.md
-
-metaharness.io/              # optional derived publication repo
-  public/                    # generated static pages
-  receipts/                  # sanitized JSON receipts
+  site/io/                   # generated pages, published only via repo-synced host
 ```
 
 or inside a consuming repo:
@@ -114,7 +113,9 @@ or inside a consuming repo:
 some-private-project/
   .metaharness/contracts/
   .metaharness/receipts/
-  site/io/                   # generated, hosted privately
+  site/io/                   # generated, hosted with same repo permissions
 ```
+
+A separate `metaharness.io` repository is acceptable only if its access permissions intentionally match the review audience. Do not use a public IO repository for private work.
 
 The same renderer works for Claude Code, Codex, Hermes Agent, or CI because it consumes only a contract and a gate receipt.
