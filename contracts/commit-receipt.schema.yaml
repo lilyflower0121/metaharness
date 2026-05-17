@@ -1,0 +1,88 @@
+schema: metaharness.commit_receipt.v0
+required:
+  - schema
+  - commit
+  - intent
+  - scope
+  - risk
+  - validators
+  - results
+fields:
+  schema:
+    type: string
+    description: Must be metaharness.commit_receipt.v0.
+
+  commit:
+    type: object
+    required: [sha, parent_sha, tree_sha, message, author, timestamp]
+    fields:
+      sha: string
+      parent_sha: string
+      tree_sha: string
+      message: string
+      author: string
+      timestamp: string
+
+  intent:
+    type: object
+    required: [objective]
+    fields:
+      requirement_id: string
+      objective: string
+      non_goals: list[string]
+      allowed_paths: list[string]
+
+  scope:
+    type: object
+    required: [changed_files]
+    fields:
+      changed_files: list[string]
+      public_surface_changed: boolean
+      dependency_or_lockfile_changed: boolean
+      tests_changed: boolean
+      config_or_ci_changed: boolean
+      external_side_effect_surface: boolean
+      gate_or_policy_changed: boolean
+
+  risk:
+    type: object
+    required: [declared, inferred, escalators]
+    fields:
+      declared:
+        type: enum
+        values: [low, medium, high, unknown]
+      inferred:
+        type: enum
+        values: [low, medium, high]
+      escalators: list[string]
+      rationale: list[string]
+
+  validators:
+    type: object
+    required: [required]
+    fields:
+      required: list[string]
+      run: list[object]
+      skipped_with_reason: list[object]
+
+  results:
+    type: object
+    required: [status]
+    fields:
+      status:
+        type: enum
+        values: [pass, fail, blocked, needs_human, unknown]
+      evidence_paths: list[string]
+      command_summaries: list[object]
+      residual_risks: list[string]
+      rollback: string
+
+  decision_card:
+    type: object
+    fields:
+      blast_radius: list[string]
+      claim: string
+      risky_lines: list[string]
+      failed_or_unknown_gates: list[string]
+      if_approved: string
+      if_rejected: string
