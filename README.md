@@ -38,7 +38,7 @@ metaharness/
   .agent/      Cross-runtime resolver and routing index
   adapters/    Thin runtime adapters for Claude Code, Codex, Hermes Agent
   io/          Static IO publishing templates for human-reviewable gate receipts
-  principles/   Human-readable design principles
+  principles/   Human-readable design principles, including repo-driven design systems
   contracts/    Machine-readable schemas, task packets, and commit receipts
   rules/        Normative harness rules
   patterns/     Reusable task pipeline patterns
@@ -84,6 +84,12 @@ Activity and feedback capture:
 - [`docs/activity-feedback-capture.md`](docs/activity-feedback-capture.md) — how to structure what the agent did, what feedback arrived, which deltas were accepted, and what was retained
 - [`contracts/activity-feedback-capture.schema.yaml`](contracts/activity-feedback-capture.schema.yaml) — portable schema for JSONL/database/event-log implementations
 - [`checklists/activity-feedback-capture.md`](checklists/activity-feedback-capture.md) — manual review checklist for privacy, feedback disposition, promotion, and retention
+
+Repo-driven design systems:
+
+- [`principles/repo-driven-design-systems.md`](principles/repo-driven-design-systems.md) — make production repositories the source of truth for UI tokens, components, pages, flows, and design review evidence
+- [`docs/repo-driven-design-system-migration.md`](docs/repo-driven-design-system-migration.md) — migration pattern for retiring detached design-tool authority while keeping human-verifiable review surfaces
+- [`checklists/repo-driven-design-system-migration.md`](checklists/repo-driven-design-system-migration.md) — manual gate for token-to-flow migration, new UI proposals, PR evidence, and retirement decisions
 
 Each skill has its own `references/` and `scripts/` support files. Common artifact-building flows are managed by `artifact-build-flow-harness`; risk-specific strictness is added by the low/medium/high skills.
 

@@ -1,6 +1,6 @@
 # Metaharness Principles Overview
 
-Metaharness is built around seven initial principles.
+Metaharness is built around eight initial principles.
 
 ## 1. Freeze intent before execution
 
@@ -29,3 +29,7 @@ External sends, publishing, deletion, credential changes, account-affecting acti
 ## 7. Lessons must be classified before retention
 
 Not every lesson belongs in always-loaded memory or global rules. Retain facts, skills, evals, references, receipts, or nothing according to durability and reuse value.
+
+## 8. Repository artifacts should be human-verifiable
+
+When a repository replaces an external or detached source of truth, it must provide review surfaces that humans can inspect without trusting agent summaries. For UI/design systems, see [`repo-driven-design-systems.md`](repo-driven-design-systems.md): tokens, components, pages, flows, visual checks, accessibility evidence, and deprecated assets should be visible from repository-owned catalogs or previews.
