@@ -19,6 +19,7 @@ The harness should prevent common autonomous-agent failures:
 - prohibited substitutions
 - ungrounded assumptions
 - unsafe external side effects
+- scoped validation mistaken for global approval
 - executor self-certification
 - memory / rule bloat
 - unverifiable success claims
@@ -38,8 +39,9 @@ Required fields:
 - authority source
 - ambiguity owner
 - scope-change rule
+- scope boundary: in scope / out of scope / cannot harness / escalation triggers
 
-The key invariant is that implementation convenience must not silently change the task.
+The key invariant is that implementation convenience must not silently change the task. A second invariant is that a pass inside the contract must not be presented as approval outside the contract.
 
 ## Layer 2: Constraint & Policy Layer
 
@@ -107,6 +109,7 @@ Examples:
 - "do not break existing behavior" → regression tests
 - "safe for public repo" → secret scan and public-release checklist
 - "respect non-goals" → objective / non-goal diff check
+- "this pass only covers X" → scope-boundary gate with out-of-scope, cannot-harness, accident scenarios, and escalation triggers
 - "external side effects are controlled" → authority and rollback checklist
 - "review burden is low" → compact receipt with evidence links
 

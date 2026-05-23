@@ -1,0 +1,27 @@
+phase: implementation
+risk_tier: medium
+objective: Demonstrate an invalid scope-boundary contract missing cannot-harness escalation.
+non_goals:
+  - Do not pass validation.
+prohibited_substitutions:
+  - Do not replace cannot-harness details with vague residual risk.
+constraints:
+  allowed_paths:
+    - contracts/examples/scope-boundary.missing-cannot-harness.invalid.yaml
+  allowed_tools:
+    - read_file
+  external_side_effect_policy: no external side effects
+  data_classification: public
+scope_boundary:
+  in_scope:
+    - structural fixture demonstration
+  out_of_scope:
+    - real approval
+  cannot_harness:
+    - vague unverified things
+  boundary_assumptions:
+    - structural fields are present but insufficient
+  accident_scenarios:
+    - local pass is overclaimed
+  escalation_triggers:
+    - downstream asks for approval

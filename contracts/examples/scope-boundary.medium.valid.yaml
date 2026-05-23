@@ -1,0 +1,69 @@
+phase: implementation
+risk_tier: medium
+objective: Demonstrate a contract with explicit scope-boundary declarations.
+non_goals:
+  - Do not claim approval outside this example.
+prohibited_substitutions:
+  - Do not treat this fixture as a real project approval.
+constraints:
+  allowed_paths:
+    - contracts/examples/scope-boundary.medium.valid.yaml
+  allowed_tools:
+    - read_file
+  external_side_effect_policy: no external side effects
+  data_classification: public
+lower_bound:
+  design_controls:
+    objective_integrity: example objective is explicit
+    authority_boundary: no external side effects are authorized
+    data_boundary: public fixture data only
+    untrusted_input_boundary: no untrusted instructions are executed
+    allowed_surface: example contract only
+    evidence_lower_bound: fixture demonstrates structure only
+    stop_or_rollback: discard fixture changes if invalid
+    validator_boundary: scope_boundary_gate validates this section
+    supply_chain_boundary: "not_applicable: no dependencies or package changes"
+    retention_boundary: retain only as public example fixture
+  validation_controls:
+    evidence_receipt: validator output is the receipt
+    side_effect_readback: no external side effects
+    secret_or_private_data_check: public fixture contains no secrets
+    changed_surface_check: example-only changed surface
+    validator_result: scope_boundary_gate passes
+    rollback_or_irreversibility_result: revert fixture change
+    retention_result: retained as public valid fixture
+scope_boundary:
+  in_scope:
+    - verify that an example contract declares the required boundary fields
+  out_of_scope:
+    - approve any real downstream project
+    - prove semantic correctness beyond structural fixture validity
+  cannot_harness:
+    - item: real-world adequacy of the example boundary
+      reason: fixture has no domain evidence or reviewer
+      required_escalation: create a real task contract with domain evidence and reviewer receipt
+  boundary_assumptions:
+    - structural fields are useful but not semantic proof
+  accident_scenarios:
+    - the fixture pass is mistaken for a real approval
+  escalation_triggers:
+    - any downstream use beyond validator fixture testing
+evidence_policy:
+  required_sources:
+    - contracts/examples/scope-boundary.medium.valid.yaml
+validation:
+  automated_checks:
+    - python3 scripts/scope_boundary_gate.py --contract contracts/examples/scope-boundary.medium.valid.yaml
+  validator_role: independent reviewer or codegate
+  success_criteria:
+    - scope_boundary_gate passes for this fixture
+rollback:
+  rollback_path: remove or revert this fixture
+stop_conditions:
+  - fixture is used as real approval
+phase_controls:
+  changed_surfaces:
+    - contracts/examples/scope-boundary.medium.valid.yaml
+  validators:
+    - python3 scripts/scope_boundary_gate.py --contract contracts/examples/scope-boundary.medium.valid.yaml
+  rollback_path: remove or revert this fixture

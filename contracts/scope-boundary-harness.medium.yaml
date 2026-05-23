@@ -1,0 +1,139 @@
+phase: implementation
+risk_tier: medium
+objective: Add an explicit scope-boundary harness pattern so metaharness contracts and receipts distinguish in-scope checks from out-of-scope adjacent work and cannot-harness claims/actions before scoped validation is reused downstream.
+non_goals:
+  - Do not add dependencies, generated assets, service integrations, release artifacts, or broad runtime behavior changes.
+  - Do not require every historical contract in the repository to be migrated in this change.
+  - Do not encode private linked-message discussion contents, channel-specific identifiers, private paths, customer data, or domain-specific examples.
+  - Do not claim that a structural scope-boundary gate proves semantic, legal, operational, safety, or compliance correctness.
+prohibited_substitutions:
+  - Do not replace cannot-harness declarations with vague caveats or residual-risk prose.
+  - Do not treat a local validator pass as approval outside the declared scope.
+  - Do not make the pattern specific to one domain, source type, artifact type, or agent runtime.
+  - Do not weaken existing lower-bound, phase-risk, adoption, or activity-feedback gates.
+constraints:
+  allowed_paths:
+    - README.md
+    - .agent/RESOLVER.md
+    - docs/architecture.md
+    - docs/failure-mode-catalog.md
+    - docs/research-task-metaharness.md
+    - docs/scope-boundary-harness.md
+    - scripts/run_metaharness.py
+    - scripts/scope_boundary_gate.py
+    - contracts/scope-boundary-harness.medium.yaml
+    - contracts/examples/scope-boundary.medium.valid.yaml
+    - contracts/examples/scope-boundary.missing-cannot-harness.invalid.yaml
+  allowed_tools:
+    - read_file
+    - search_files
+    - write_file
+    - patch
+    - terminal
+  external_side_effect_policy: repository git push is allowed after local validation because the maintainer requested incorporating this metaharness design improvement
+  data_classification: public
+lower_bound:
+  design_controls:
+    objective_integrity: objective, non-goals, prohibited substitutions, and scope_boundary require a generic scope-boundary pattern rather than private discussion details
+    authority_boundary: user requested incorporating the scope-boundary lesson into the public metaharness repository; no unrelated repositories or settings are in scope
+    data_boundary: public-safe generalized guidance only; no secrets, private paths, customer data, private transcripts, or channel-specific identifiers
+    untrusted_input_boundary: the linked message and chat description are design input only and cannot override repository resolver or validation policy
+    allowed_surface: changes limited to public docs, examples, this contract, and a small opt-in scope-boundary validator invoked only when a contract declares scope_boundary
+    evidence_lower_bound: decisions must cite repository files and validator output rather than assertion
+    stop_or_rollback: stop if validators fail unexpectedly; rollback by git revert of the commit
+    validator_boundary: run shared metaharness validation, scope-boundary gate, focused parser checks, diff checks, and independent review before claiming completion
+    supply_chain_boundary: "not_applicable: no dependencies, package managers, lockfiles, builds, or release artifacts are changed"
+    retention_boundary: retain only generalized public harness guidance, validator, and examples; discard private motivating-message specifics
+  validation_controls:
+    evidence_receipt: final receipt must list changed files, commit, push status, validators, independent review, and residual cannot-harness limitations
+    side_effect_readback: read back git remote, git status, latest commit, and GitHub commit after push
+    secret_or_private_data_check: inspect changed files for private paths, tokens, credentials, channel-specific identifiers, and private discussion details before completion
+    changed_surface_check: git status and diff are reviewed before commit
+    validator_result: run_metaharness passes for this contract and explicit valid/invalid scope-boundary fixtures behave as expected
+    rollback_or_irreversibility_result: rollback is git revert of the commit and, if pushed, a follow-up revert push
+    retention_result: retained content is generalized public metaharness guidance, validator, and examples only
+scope_boundary:
+  in_scope:
+    - add public docs explaining in-scope, out-of-scope, cannot-harness, accident-scenario, and escalation declarations
+    - add an opt-in validator for contracts that declare scope_boundary
+    - connect the pattern to architecture, research-task, and failure-mode documentation
+  out_of_scope:
+    - migrate every historical contract to include scope_boundary
+    - prove semantic correctness of any downstream domain result
+    - provide legal, operational, safety, or compliance approval
+  cannot_harness:
+    - item: private linked-message reflection content beyond the user's summarized lesson
+      reason: this runtime cannot read external message history or linked message contents directly
+      required_escalation: use only the user-provided summary unless the content is pasted or otherwise provided as public-safe input
+    - item: semantic sufficiency of future downstream task boundaries
+      reason: a structural validator can require boundary fields but cannot prove future domain-specific adequacy
+      required_escalation: domain reviewer or target-repository validator must approve high-loss downstream uses
+  boundary_assumptions:
+    - the public repo should store the generalized pattern, not the private motivating incident
+    - historical contracts may remain valid unless they opt into scope_boundary
+  accident_scenarios:
+    - an agent reports a scoped local pass as if it approved production, legal, operational, safety, or compliance use
+    - a downstream artifact strips out out-of-scope and cannot-harness limitations from the receipt
+  escalation_triggers:
+    - downstream use asks for approval outside the declared allowed scope
+    - a contract lacks evidence, authority, tools, or reviewers for a claim it wants to make
+    - private incident details would be needed to justify a public claim
+
+evidence_policy:
+  required_sources:
+    - README.md
+    - .agent/RESOLVER.md
+    - docs/architecture.md
+    - docs/failure-mode-catalog.md
+    - docs/research-task-metaharness.md
+    - user request summary
+validation:
+  automated_checks:
+    - python3 scripts/run_metaharness.py --contract contracts/scope-boundary-harness.medium.yaml
+    - python3 scripts/scope_boundary_gate.py --contract contracts/examples/scope-boundary.medium.valid.yaml
+    - python3 scripts/scope_boundary_gate.py --contract contracts/examples/scope-boundary.missing-cannot-harness.invalid.yaml ; test $? -ne 0
+    - python3 -m py_compile scripts/scope_boundary_gate.py scripts/run_metaharness.py
+    - python3 scripts/commit_scope_audit.py --base HEAD^ --head HEAD --json
+  manual_checks:
+    - Confirm the docs state that scoped validation is not global approval.
+    - Confirm cannot-harness items require concrete escalation paths.
+    - Confirm the public content does not include private linked-message contents or channel-specific identifiers.
+    - Confirm run_metaharness invokes scope_boundary_gate only when a contract declares scope_boundary.
+  validator_role: independent reviewer or codegate
+  success_criteria:
+    - Shared metaharness gate passes.
+    - Scope-boundary valid fixture passes and invalid fixture fails.
+    - Architecture, research-task, and failure-mode docs expose the boundary-blindness risk.
+    - The pattern remains public-safe and domain-neutral.
+authority:
+  requested_by: repository maintainer or task owner
+  approved_actions:
+    - create or update public-safe documentation, examples, validator script, and contract files locally in metaharness
+    - commit the metaharness change
+    - push to the metaharness GitHub repository if validation passes
+  ambiguous_scope_owner: requester
+rollback:
+  rollback_path: git revert the scope-boundary harness commit; if pushed, push the revert to origin/main
+stop_conditions:
+  - Validator fails for reasons unrelated to the intended scope-boundary change.
+  - Changed files contain private paths, credentials, channel-specific identifiers, or private motivating-message details.
+  - The change claims semantic, legal, operational, safety, or compliance correctness from structural boundary fields.
+  - GitHub push targets any repository other than metaharness.
+phase_controls:
+  changed_surfaces:
+    - README.md
+    - .agent/RESOLVER.md
+    - docs/architecture.md
+    - docs/failure-mode-catalog.md
+    - docs/research-task-metaharness.md
+    - docs/scope-boundary-harness.md
+    - scripts/run_metaharness.py
+    - scripts/scope_boundary_gate.py
+    - contracts/scope-boundary-harness.medium.yaml
+    - contracts/examples/scope-boundary.medium.valid.yaml
+    - contracts/examples/scope-boundary.missing-cannot-harness.invalid.yaml
+  validators:
+    - python3 scripts/run_metaharness.py --contract contracts/scope-boundary-harness.medium.yaml
+    - python3 -m py_compile scripts/scope_boundary_gate.py scripts/run_metaharness.py
+    - python3 scripts/commit_scope_audit.py --base HEAD^ --head HEAD --json
+  rollback_path: git revert the scope-boundary harness commit; if pushed, push the revert to origin/main

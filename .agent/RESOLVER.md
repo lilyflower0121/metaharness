@@ -107,6 +107,9 @@ python3 scripts/check_agent_adapters.py
 # Repository adoption packet
 python3 scripts/adoption_gate.py --contract <contract.yaml>
 
+# Scope-boundary declarations when a contract includes scope_boundary
+python3 scripts/scope_boundary_gate.py --contract <contract.yaml>
+
 # Commit/branch impact routing
 python3 scripts/commit_scope_audit.py --base <base> --head <head> --json
 

@@ -109,9 +109,9 @@ recall_requirements:
 
 ## Gate sequence
 
-### Gate 0: Downstream-use contract
+### Gate 0: Downstream-use and scope-boundary contract
 
-Freeze the intended use before collecting evidence:
+Freeze the intended use and the boundary before collecting evidence:
 
 - artifact or decision types that may consume the research;
 - audience: private, internal, customer, public;
@@ -120,7 +120,9 @@ Freeze the intended use before collecting evidence:
 - whether loss is smooth, thresholded, irreversible, or heavy-tailed;
 - reversibility and recallability;
 - risk tier and required reviewers;
-- prohibited uses.
+- prohibited uses;
+- in-scope checks, out-of-scope adjacent work, and cannot-harness claims or actions;
+- escalation triggers required before blocked uses can become allowed.
 
 ### Gate 1: Metric/loss-function fit
 
@@ -165,6 +167,8 @@ For customer-facing, operational, reusable, or automated outputs, require depend
 For each harness release or major research packet, ask:
 
 - What downstream action will this research enable?
+- What is this harness explicitly not checking?
+- Which claims or actions cannot be harnessed with the current evidence, authority, tools, and reviewers?
 - What is the expected benefit if it is right?
 - What is the expected loss if it is wrong, stale, missing, overgeneralized, or applied to the wrong context?
 - What are the estimated probabilities, and how confident are we in those estimates?

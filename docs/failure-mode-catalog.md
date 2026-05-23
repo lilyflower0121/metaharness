@@ -83,10 +83,12 @@ Lower-bound (LB) families:
 | FM-040 | Raw trace hoarding | exploration, operate, retention | medium+ | activity/feedback privacy and retention gate |
 | FM-041 | Feedback applied without disposition | mvp_exploration, specification, implementation, retention | medium+ | feedback ledger and requirement-delta gate |
 | FM-042 | Model inference promoted as requirement | mvp_exploration, specification, retention | medium+ | confirmation and validator-promotion gate |
+| FM-043 | Scope boundary blindness | all, especially research, delegation, merge, release | medium+ | scope-boundary and cannot-harness gate |
+| FM-044 | Scoped pass overclaim | validation, merge, release, operate | medium+ | receipt boundary preservation gate |
 
 ## Agent development / delegation anti-patterns
 
-These modes come from `/Users/lily/cowork/research/paper/2026-05-17_agent_development_delegation_failure_modes.md` and should be converted into validators or receipts where possible.
+These modes come from internal agent-development and delegation failure analysis and should be converted into validators or receipts where possible.
 
 - **Framing omission**: do not enter implementation/delegation without objective, non-goals, alternative frames, and a wrong-if condition.
 - **Hidden preconditions**: record local availability, permissions, data/API/auth/source quality, and critical unknowns before execution.
@@ -109,6 +111,8 @@ These modes come from `/Users/lily/cowork/research/paper/2026-05-17_agent_develo
 - **Raw trace hoarding**: activity logs, recordings, and tool outputs are evidence artifacts, not the default memory layer. Capture structured event summaries and evidence refs; store raw private payloads only with classification, redaction, TTL, and access controls.
 - **Feedback applied without disposition**: every human/test/runtime/reviewer signal must be classified and marked unreviewed/accepted/rejected/needs clarification/promoted/discarded before it changes contracts, code, skills, or evals.
 - **Model inference promoted as requirement**: an agent can propose requirement deltas from traces, but confirmation or validator evidence is required before retention or implementation.
+- **Scope boundary blindness**: every task that may feed a broader workflow must name in-scope checks, out-of-scope adjacent work, cannot-harness claims/actions, and escalation triggers before a local pass can be reused.
+- **Scoped pass overclaim**: final receipts and downstream artifacts must preserve the boundary statement; a validator pass is scoped evidence, not production, legal, operational, safety, or compliance approval unless those checks were actually inside the contract.
 
 ## Commit-scoped delegation anti-patterns
 

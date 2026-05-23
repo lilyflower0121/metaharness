@@ -85,6 +85,10 @@ Activity and feedback capture:
 - [`contracts/activity-feedback-capture.schema.yaml`](contracts/activity-feedback-capture.schema.yaml) — portable schema for JSONL/database/event-log implementations
 - [`checklists/activity-feedback-capture.md`](checklists/activity-feedback-capture.md) — manual review checklist for privacy, feedback disposition, promotion, and retention
 
+Scope and boundary control:
+
+- [`docs/scope-boundary-harness.md`](docs/scope-boundary-harness.md) — require in-scope, out-of-scope, cannot-harness, accident-scenario, and escalation declarations so scoped validation is not mistaken for global approval
+
 Repo-driven design systems:
 
 - [`principles/repo-driven-design-systems.md`](principles/repo-driven-design-systems.md) — make production repositories the source of truth for UI tokens, components, pages, flows, and design review evidence
@@ -105,6 +109,7 @@ python3 scripts/lb_gate.py --contract <contract.yaml>
 python3 scripts/metaharness_gate.py --risk <low|medium|high> --contract <contract.yaml>
 python3 scripts/phase_risk_gate.py --contract <contract.yaml>
 python3 scripts/adoption_gate.py --contract <repository-adoption-contract.yaml>
+python3 scripts/scope_boundary_gate.py --contract <contract-with-scope-boundary.yaml>
 python3 scripts/activity_feedback_gate.py --packet <activity-feedback-packet.yaml>
 python3 scripts/commit_scope_audit.py --base main --head HEAD --json
 ```
