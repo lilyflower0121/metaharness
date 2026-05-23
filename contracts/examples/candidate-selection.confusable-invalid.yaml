@@ -1,0 +1,43 @@
+schema: metaharness.candidate_selection_packet.v0
+packet_id: candidate-selection-confusable-invalid
+use_contract:
+  downstream_use: automated selection
+  prohibited_uses: []
+metric_basis:
+  selected_metric: raw_candidate_count
+  reason: more candidates were found
+candidates:
+  - candidate_id: C-INVALID
+    claimed_identity:
+      name: Ambiguous Candidate
+      normalized_name: ambiguous-candidate
+      aliases: []
+      version_or_context: unspecified
+    identity_basis:
+      distinguishing_features: []
+      unresolved_identity_risks:
+        - candidate may refer to multiple non-equivalent records
+      confidence: low
+    evidence:
+      source_refs:
+        - source_id: S-UNVERIFIED
+          locator: example://search-result-only
+      source_authority: unverified
+      freshness_or_version: unknown
+      applicability_limits: []
+      missing_evidence:
+        - no admitted source establishes identity or applicability
+    confusable_cases: []
+    allowed_use_scope:
+      search_index: true
+      ideation: true
+      draft_generation: true
+      internal_human_review: true
+      customer_facing_artifact: true
+      operational_decision: true
+      automated_selection: true
+      compliance_grade_assertion: true
+    reviewer_questions: []
+packet_decision:
+  status: invalid_fixture
+  reason: demonstrates a candidate that must not pass because ambiguity, missing evidence, absent confusable-case analysis, and unrestricted use scope are combined

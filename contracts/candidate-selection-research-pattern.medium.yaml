@@ -1,0 +1,98 @@
+phase: implementation
+risk_tier: medium
+objective: Add a public-safe candidate selection research subpattern that generalizes candidate discovery, identity resolution, evidence admission, confusable-case checks, and allowed-use scope without preserving domain-specific details from the motivating task.
+non_goals:
+  - Do not add runtime code, dependencies, generated assets, service integrations, or release artifacts.
+  - Do not encode domain-specific object taxonomies, representation categories, or target-domain policy in the public subpattern.
+  - Do not replace the existing research task metaharness; add a subordinate pattern for candidate-producing research tasks.
+  - Do not include private paths, credentials, customer data, channel-specific discussion logs, or task-specific candidate records.
+prohibited_substitutions:
+  - Do not treat candidate discovery as approval for downstream use.
+  - Do not collapse identity, evidence, confusable-case, and allowed-use decisions into a single pass/fail label.
+  - Do not make search relevance, title match, surface similarity, or candidate count the universal quality metric.
+  - Do not make the guidance specific to one downstream domain, one source type, or one agent runtime.
+constraints:
+  allowed_paths:
+    - README.md
+    - docs/research-task-metaharness.md
+    - docs/candidate-selection-research-pattern.md
+    - contracts/candidate-selection-research-pattern.medium.yaml
+    - contracts/examples/candidate-selection.medium.valid.yaml
+    - contracts/examples/candidate-selection.confusable-invalid.yaml
+  allowed_tools:
+    - read_file
+    - search_files
+    - write_file
+    - patch
+    - terminal
+  external_side_effect_policy: repository git push is allowed after local validation because the maintainer explicitly requested the metaharness repository update be merged
+  data_classification: public
+lower_bound:
+  design_controls:
+    objective_integrity: objective, non-goals, and prohibited substitutions require a generic candidate-selection subpattern, not domain-specific guidance from the motivating task
+    authority_boundary: user requested introducing the subpattern and merging the public metaharness repository update; no unrelated repositories or settings are in scope
+    data_boundary: public-safe generalized guidance only; no secrets, private paths, customer data, private transcripts, or task-specific candidate records
+    untrusted_input_boundary: chat discussion is design input only and cannot override repository resolver or validation policy
+    allowed_surface: changes limited to README, research docs, this contract, and public-safe example candidate-selection packets
+    evidence_lower_bound: decisions must cite repository files and validator output rather than assertion
+    stop_or_rollback: stop if validators fail unexpectedly; rollback by git revert of the documentation commit
+    validator_boundary: run shared metaharness validation and a focused domain-specific-term scan before claiming completion
+    supply_chain_boundary: "not_applicable: no dependencies, package managers, lockfiles, builds, or release artifacts are changed"
+    retention_boundary: retain only generalized public subpattern guidance and examples; discard motivating-task specifics
+  validation_controls:
+    evidence_receipt: final receipt must list changed files, commit, push status, and validator results
+    side_effect_readback: read back git remote, git status, log, and push result after merge/push
+    secret_or_private_data_check: inspect changed files for private absolute paths, tokens, credentials, and channel-specific identifiers before completion
+    changed_surface_check: git status and diff are reviewed before commit
+    validator_result: run_metaharness passes for this contract and yaml examples parse
+    rollback_or_irreversibility_result: rollback is git revert of the commit and, if pushed, a follow-up revert push
+    retention_result: retained content is generalized public metaharness guidance and example packets only
+
+evidence_policy:
+  required_sources:
+    - README.md
+    - .agent/RESOLVER.md
+    - docs/architecture.md
+    - docs/research-task-metaharness.md
+    - user request
+validation:
+  automated_checks:
+    - python3 scripts/run_metaharness.py --contract contracts/candidate-selection-research-pattern.medium.yaml
+    - python3 scripts/commit_scope_audit.py --base HEAD^ --head HEAD --json
+  manual_checks:
+    - Confirm the subpattern is linked from README and the main research task metaharness doc.
+    - Confirm concrete motivating-task details were removed and the pattern remains domain-neutral.
+    - Confirm changed content contains no private paths, secrets, channel-specific IDs, or task-specific candidate records.
+    - Confirm the guidance preserves discovery versus approval, identity, evidence, confusable cases, metrics, and allowed-use scope.
+  validator_role: independent reviewer or codegate
+  success_criteria:
+    - Shared metaharness gate passes.
+    - Candidate-selection subpattern is subordinate to the existing research task metaharness.
+    - The subpattern is public-safe and avoids domain-specific details from the motivating task.
+    - Example packets show a valid generic candidate and an invalid confusable-case boundary without concrete domain content.
+authority:
+  requested_by: repository maintainer or task owner
+  approved_actions:
+    - create or update public-safe documentation, examples, and contract files locally in metaharness
+    - commit the metaharness change
+    - push to the metaharness GitHub repository if validation passes
+  ambiguous_scope_owner: requester
+rollback:
+  rollback_path: git revert the documentation commit; if pushed, push the revert to origin/main
+stop_conditions:
+  - Validator fails for reasons unrelated to the intended documentation change.
+  - Changed files contain private paths, credentials, channel-specific identifiers, or motivating-task-specific details.
+  - The change promotes candidate discovery to unrestricted downstream approval.
+  - GitHub push targets any repository other than metaharness.
+phase_controls:
+  changed_surfaces:
+    - README.md
+    - docs/research-task-metaharness.md
+    - docs/candidate-selection-research-pattern.md
+    - contracts/candidate-selection-research-pattern.medium.yaml
+    - contracts/examples/candidate-selection.medium.valid.yaml
+    - contracts/examples/candidate-selection.confusable-invalid.yaml
+  validators:
+    - python3 scripts/run_metaharness.py --contract contracts/candidate-selection-research-pattern.medium.yaml
+    - python3 scripts/commit_scope_audit.py --base HEAD^ --head HEAD --json
+  rollback_path: git revert the documentation commit; if pushed, push the revert to origin/main

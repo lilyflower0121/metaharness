@@ -130,6 +130,12 @@ Declare the metric before evaluation. A research task used for top-k source sele
 
 Admit sources only with identity, reachability/freshness, authority, applicability, and usage constraints recorded. Secondary or unverified sources may support discovery, vocabulary, or hypotheses, but must not silently support high-loss downstream use.
 
+### Candidate-selection subpattern
+
+When a research task returns candidate items rather than a single answer, apply the subordinate [`candidate-selection research subpattern`](candidate-selection-research-pattern.md). Discovery is not approval: each material candidate should carry identity basis, admitted evidence, applicability limits, confusable-case boundaries, and `allowed_use_scope` before downstream use.
+
+Use the subpattern for generic candidate-producing tasks. Keep domain-specific object taxonomies and target-repository policy outside this public pattern; adapt them through the target repository's own validators and review rules.
+
 ### Gate 3: Output extraction and traceability
 
 Extract structured records rather than prose-only summaries. Each material assertion, estimate, ranking, or recommendation needs direct evidence references and uncertainty notes. A bibliography without output-level mapping is not enough for high-stakes service use.

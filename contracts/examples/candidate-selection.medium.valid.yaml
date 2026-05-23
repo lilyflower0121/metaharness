@@ -1,0 +1,58 @@
+schema: metaharness.candidate_selection_packet.v0
+packet_id: candidate-selection-medium-valid
+use_contract:
+  downstream_use: ranked internal review before draft generation
+  prohibited_uses:
+    - operational_decision
+    - automated_selection
+    - compliance_grade_assertion
+metric_basis:
+  selected_metric: precision@5
+  reason: reviewers inspect a short ranked candidate set before deciding which records can support a draft
+  rejected_metrics:
+    - name: raw_candidate_count
+      reason: count does not capture identity risk or downstream misuse loss
+candidates:
+  - candidate_id: C-001
+    claimed_identity:
+      name: Example Candidate Alpha
+      normalized_name: candidate-alpha
+      aliases:
+        - Alpha record
+      version_or_context: public example fixture
+    identity_basis:
+      distinguishing_features:
+        - stable identifier appears in the admitted source
+        - scope statement matches the use contract
+      unresolved_identity_risks:
+        - applicability outside the example context is not established
+      confidence: medium
+    evidence:
+      source_refs:
+        - source_id: S-001
+          locator: example://source-alpha#identity
+      source_authority: recognized_reference
+      freshness_or_version: example fixture version 1
+      applicability_limits:
+        - internal review only
+      missing_evidence:
+        - no independent reviewer receipt for higher use scopes
+    confusable_cases:
+      - candidate_or_class: Example Candidate Beta
+        why_confusable: similar name and overlapping summary wording
+        why_not_equivalent: different scope statement in admitted source
+        misuse_loss: medium
+    allowed_use_scope:
+      search_index: true
+      ideation: true
+      draft_generation: true
+      internal_human_review: true
+      customer_facing_artifact: false
+      operational_decision: false
+      automated_selection: false
+      compliance_grade_assertion: false
+    reviewer_questions:
+      - Is the recorded scope sufficient for the intended draft section?
+packet_decision:
+  status: pass_for_limited_use
+  reason: candidate has identity basis, admitted evidence, confusable-case boundary, and restricted allowed-use scope
