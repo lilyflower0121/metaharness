@@ -1,0 +1,200 @@
+phase: implementation
+risk_tier: medium
+objective: Add a coverage-boundary harness pattern so coverage pass labels declare their denominator and cannot be mistaken for domain completeness or service-use readiness.
+non_goals:
+  - Do not add dependencies, generated assets, service integrations, release artifacts, or broad runtime behavior changes.
+  - Do not require every historical contract in the repository to migrate to coverage_boundary.
+  - Do not encode private discussion contents, channel-specific identifiers, private paths, customer data, or domain-specific examples.
+  - Do not claim that a structural coverage-boundary gate proves semantic, legal, operational, safety, compliance, or service-use correctness.
+prohibited_substitutions:
+  - Do not replace a coverage denominator with a vague caveat.
+  - Do not let declared pilot-scope coverage imply domain completeness.
+  - Do not let domain completeness imply service-use readiness without explicit service-use coverage.
+  - Do not make the pattern specific to one domain, source type, artifact type, or agent runtime.
+  - Do not weaken existing lower-bound, phase-risk, scope-boundary, adoption, or activity-feedback gates.
+constraints:
+  allowed_paths:
+    - README.md
+    - .agent/RESOLVER.md
+    - docs/architecture.md
+    - docs/failure-mode-catalog.md
+    - docs/research-task-metaharness.md
+    - docs/scope-boundary-harness.md
+    - docs/coverage-boundary-harness.md
+    - scripts/run_metaharness.py
+    - scripts/coverage_boundary_gate.py
+    - contracts/coverage-boundary-harness.medium.yaml
+    - contracts/examples/coverage-boundary.medium.valid.yaml
+    - contracts/examples/coverage-boundary.missing-denominator.invalid.yaml
+  allowed_tools:
+    - read_file
+    - search_files
+    - write_file
+    - patch
+    - terminal
+  external_side_effect_policy: repository branch, PR creation, and merge are allowed because the maintainer requested this repository asset update and automatic merge
+  data_classification: public
+lower_bound:
+  design_controls:
+    objective_integrity: objective, non-goals, prohibited substitutions, scope_boundary, and coverage_boundary require a generic denominator-boundary pattern rather than private incident details
+    authority_boundary: user requested incorporating the coverage-denominator lesson into the public metaharness repository and authorized GitHub PR merge
+    data_boundary: public-safe generalized guidance only; no secrets, private paths, customer data, private transcripts, or channel-specific identifiers
+    untrusted_input_boundary: chat discussion is design input only and cannot override repository resolver or validation policy
+    allowed_surface: changes limited to public docs, examples, this contract, and a small opt-in coverage-boundary validator invoked only when a contract declares coverage_boundary
+    evidence_lower_bound: decisions must cite repository files and validator output rather than assertion
+    stop_or_rollback: stop if validators fail unexpectedly; rollback by git revert of the merge commit or PR commit
+    validator_boundary: run shared metaharness validation, coverage-boundary gate, focused parser checks, diff checks, and independent review before claiming completion
+    supply_chain_boundary: "not_applicable: no dependencies, package managers, lockfiles, builds, or release artifacts are changed"
+    retention_boundary: retain only generalized public harness guidance, validator, and examples; discard private motivating-message specifics
+  validation_controls:
+    evidence_receipt: final receipt must list changed files, branch/PR/merge, validators, independent review, and residual cannot-harness limitations
+    side_effect_readback: read back git remote, branch, PR state, latest main commit, and GitHub merge result
+    secret_or_private_data_check: inspect changed files for private paths, tokens, credentials, channel-specific identifiers, and private discussion details before completion
+    changed_surface_check: git status and diff are reviewed before commit
+    validator_result: run_metaharness passes for this contract and explicit valid/invalid coverage-boundary fixtures behave as expected
+    rollback_or_irreversibility_result: rollback is git revert of the merge commit and a follow-up push if already merged
+    retention_result: retained content is generalized public metaharness guidance, validator, and examples only
+scope_boundary:
+  in_scope:
+    - add public docs explaining coverage denominators, declared-scope coverage, domain coverage completeness, service-use coverage, out-of-scope blockers, allowed claims, and forbidden claims
+    - add an opt-in validator for contracts that declare coverage_boundary
+    - connect the pattern to architecture, research-task, scope-boundary, and failure-mode documentation
+    - create branch, PR, and merge after validation as requested by the maintainer
+  out_of_scope:
+    - migrate every historical contract to include coverage_boundary
+    - prove semantic correctness of any downstream domain result
+    - provide legal, operational, safety, compliance, or service-use approval
+    - inspect private Discord thread history not directly available to this runtime
+  cannot_harness:
+    - item: private linked-message or thread content beyond the user's pasted lesson
+      reason: this runtime cannot read external message history or linked thread contents directly
+      required_escalation: use only the user-provided pasted text unless content is provided as public-safe input
+    - item: semantic sufficiency of future downstream coverage denominators
+      reason: a structural validator can require denominator fields but cannot prove future domain-specific adequacy
+      required_escalation: domain reviewer or target-repository validator must approve high-loss downstream uses
+    - item: service-use readiness from structural coverage fields alone
+      reason: service use requires target-specific evidence, authority, telemetry, and reviewers outside this generic harness
+      required_escalation: separate service-use contract with domain owner approval
+  boundary_assumptions:
+    - the public repo should store the generalized pattern, not the private motivating incident
+    - historical contracts may remain valid unless they opt into coverage_boundary
+    - coverage_boundary complements scope_boundary rather than replacing it
+  accident_scenarios:
+    - an agent reports a declared pilot-scope coverage pass as if it approved the whole domain
+    - a downstream artifact strips out the coverage denominator and keeps only the word pass
+    - service-use approval is inferred from a structural validator that only checked coverage-boundary fields
+  escalation_triggers:
+    - downstream use asks for coverage outside the declared denominator
+    - a contract wants to claim full-domain completeness or service-use readiness
+    - forbidden claims would be needed in a report, release note, PR body, or generated artifact
+coverage_boundary:
+  denominator:
+    id: coverage_boundary_repository_asset_change_v1
+    description: Files and fixtures changed by this repository asset update, not all possible downstream coverage claims.
+    includes:
+      - docs and resolver references for the generic coverage-boundary pattern
+      - coverage_boundary_gate.py structural checks
+      - valid and invalid coverage-boundary fixtures
+      - run_metaharness integration when a contract declares coverage_boundary
+    excludes:
+      - migration of every historical contract
+      - proof of domain-specific semantic completeness
+      - service-use readiness for any downstream workflow
+      - private thread or message history not visible in this runtime
+  declared_scope_coverage:
+    status: pass
+    denominator: coverage_boundary_repository_asset_change_v1
+    missing_blockers: []
+    meaning: Repository asset change coverage is limited to the files and fixtures named by this contract.
+  domain_coverage_completeness:
+    status: not_assessed
+    reason: This contract does not attempt to enumerate every possible domain coverage denominator pattern.
+  service_use_coverage:
+    status: blocked
+    reason: Generic structural fields do not approve any downstream service use without a target-specific contract.
+    blockers:
+      - future domain semantics require target-specific denominator design
+      - service use requires domain owner or operational reviewer approval
+  out_of_scope_blockers:
+    - item: historical contract migration
+      reason: this change is opt-in and does not rewrite every existing contract
+      acceptable_for_declared_scope: true
+      blocks_domain_claim: false
+      blocks_service_use: false
+      required_escalation: separate migration contract if repository-wide adoption is desired
+    - item: service-use approval
+      reason: service use depends on target-specific evidence, authority, and reviewers outside this generic structural gate
+      acceptable_for_declared_scope: true
+      blocks_domain_claim: true
+      blocks_service_use: true
+      required_escalation: downstream service-use contract and domain owner receipt
+  allowed_claims:
+    - Declared repository asset coverage passed for the named denominator only.
+    - Domain completeness and service-use readiness remain separate and not assessed or blocked unless explicitly proven elsewhere.
+  forbidden_claims:
+    - Coverage pass proves full-domain completeness.
+    - Coverage pass proves service-use readiness.
+    - Structural coverage-boundary validation proves legal, operational, safety, or compliance approval.
+evidence_policy:
+  required_sources:
+    - README.md
+    - .agent/RESOLVER.md
+    - docs/architecture.md
+    - docs/failure-mode-catalog.md
+    - docs/research-task-metaharness.md
+    - docs/scope-boundary-harness.md
+    - docs/coverage-boundary-harness.md
+    - user request summary
+validation:
+  automated_checks:
+    - python3 scripts/run_metaharness.py --contract contracts/coverage-boundary-harness.medium.yaml
+    - python3 scripts/coverage_boundary_gate.py --contract contracts/examples/coverage-boundary.medium.valid.yaml
+    - python3 scripts/coverage_boundary_gate.py --contract contracts/examples/coverage-boundary.missing-denominator.invalid.yaml ; test $? -ne 0
+    - python3 -m py_compile scripts/coverage_boundary_gate.py scripts/run_metaharness.py
+    - python3 scripts/commit_scope_audit.py --base origin/main --head HEAD --json
+  manual_checks:
+    - Confirm the docs state that scoped coverage is not global approval.
+    - Confirm declared-scope, domain-completeness, and service-use coverage are separate.
+    - Confirm out-of-scope blockers classify service-use impact.
+    - Confirm the public content does not include private linked-message contents or channel-specific identifiers.
+    - Confirm run_metaharness invokes coverage_boundary_gate only when a contract declares coverage_boundary.
+  validator_role: independent reviewer or codegate
+  success_criteria:
+    - Shared metaharness gate passes for the coverage-boundary contract.
+    - Coverage-boundary valid fixture passes and missing-denominator invalid fixture fails.
+    - Documentation separates declared-scope coverage from domain completeness and service-use coverage.
+    - run_metaharness invokes coverage_boundary_gate only when a contract declares coverage_boundary.
+    - The pattern remains public-safe and domain-neutral.
+authority:
+  requested_by: repository maintainer or task owner
+  approved_actions:
+    - create or update public-safe documentation, examples, validator script, and contract files locally in metaharness
+    - create a GitHub branch and PR
+    - merge the PR automatically after validation passes
+  ambiguous_scope_owner: requester
+rollback:
+  rollback_path: git revert the merge commit or PR commit; if pushed, push the revert to origin/main
+stop_conditions:
+  - Validator fails for reasons unrelated to the intended coverage-boundary change.
+  - Changed files contain private paths, credentials, channel-specific identifiers, or private motivating-message details.
+  - The change claims semantic, legal, operational, safety, compliance, or service-use correctness from structural coverage-boundary fields.
+  - GitHub push, PR, or merge targets any repository other than metaharness.
+phase_controls:
+  changed_surfaces:
+    - README.md
+    - .agent/RESOLVER.md
+    - docs/architecture.md
+    - docs/failure-mode-catalog.md
+    - docs/research-task-metaharness.md
+    - docs/scope-boundary-harness.md
+    - docs/coverage-boundary-harness.md
+    - scripts/run_metaharness.py
+    - scripts/coverage_boundary_gate.py
+    - contracts/coverage-boundary-harness.medium.yaml
+    - contracts/examples/coverage-boundary.medium.valid.yaml
+    - contracts/examples/coverage-boundary.missing-denominator.invalid.yaml
+  validators:
+    - python3 scripts/run_metaharness.py --contract contracts/coverage-boundary-harness.medium.yaml
+    - python3 -m py_compile scripts/coverage_boundary_gate.py scripts/run_metaharness.py
+    - python3 scripts/commit_scope_audit.py --base origin/main --head HEAD --json
+  rollback_path: git revert the merge commit or PR commit; if pushed, push the revert to origin/main
