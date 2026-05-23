@@ -101,6 +101,10 @@ Research task metaharnesses:
 - [`docs/research-task-metaharness.md`](docs/research-task-metaharness.md) — expected-value harness pattern for research outputs that feed downstream artifacts, decisions, workflows, or services
 - [`docs/candidate-selection-research-pattern.md`](docs/candidate-selection-research-pattern.md) — subordinate pattern for candidate-producing research tasks: discovery, identity, evidence, confusable cases, and allowed-use scope
 
+Hallucination and uncertainty control:
+
+- [`docs/confidence-faithfulness-hallucination-harness.md`](docs/confidence-faithfulness-hallucination-harness.md) — claim-level faithful-uncertainty pattern for routing uncertain claims to evidence, retrieval, review, scoped use, abstention, or `cannot_harness` instead of relying only on answer-vs-abstain behavior
+
 Each skill has its own `references/` and `scripts/` support files. Common artifact-building flows are managed by `artifact-build-flow-harness`; risk-specific strictness is added by the low/medium/high skills.
 
 Run the structural gates directly with:

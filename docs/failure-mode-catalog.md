@@ -19,6 +19,7 @@ External reference families used as pattern sources:
 - NIST AI RMF: govern/map/measure/manage framing, documented risk treatment, context-specific controls.
 - SLSA / supply-chain guidance: provenance, dependency integrity, build/release separation.
 - OWASP ASVS-style verification: explicit controls and testable requirements rather than intent-only security claims.
+- Faithful uncertainty / metacognition research: hallucination controls should distinguish confident unsupported errors from scoped uncertainty, and should route uncertainty into evidence, retrieval, review, or abstention rather than treating answer-vs-abstain as the only control.
 
 ## Lower-bound (LB)
 
@@ -86,6 +87,10 @@ Lower-bound (LB) families:
 | FM-043 | Scope boundary blindness | all, especially research, delegation, merge, release | medium+ | scope-boundary and cannot-harness gate |
 | FM-044 | Scoped pass overclaim | validation, merge, release, operate | medium+ | receipt boundary preservation gate |
 | FM-045 | Coverage denominator blindness | validation, merge, release, operate | medium+ | coverage-boundary and receipt denominator gate |
+| FM-046 | Wrong-confident claim | all, especially research, artifact generation, agent answers | low+ | confidence-faithfulness and evidence-receipt gate |
+| FM-047 | Hedge-only safety | all | medium+ | uncertainty-to-action and allowed-use-scope gate |
+| FM-048 | Answer-vs-abstain tunnel vision | evaluation, merge, operate | medium+ | utility-tax and loss-aware routing gate |
+| FM-049 | Uncertainty erasure downstream | artifact generation, delegation, release, operate | medium+ | downstream preservation and recallability gate |
 
 ## Agent development / delegation anti-patterns
 
@@ -115,6 +120,10 @@ These modes come from internal agent-development and delegation failure analysis
 - **Scope boundary blindness**: every task that may feed a broader workflow must name in-scope checks, out-of-scope adjacent work, cannot-harness claims/actions, and escalation triggers before a local pass can be reused.
 - **Scoped pass overclaim**: final receipts and downstream artifacts must preserve the boundary statement; a validator pass is scoped evidence, not production, legal, operational, safety, or compliance approval unless those checks were actually inside the contract.
 - **Coverage denominator blindness**: every coverage-like pass must name its denominator, separate declared-scope coverage from domain completeness and service-use coverage, and preserve allowed/forbidden claims in downstream receipts.
+- **Wrong-confident claim**: a material claim with model-only, stale, missing, conflicting, or unverified evidence must not use strong or absolute language unless the loss is explicitly low and the claim is marked as hypothesis/opinion.
+- **Hedge-only safety**: uncertainty wording is not enough; uncertainty must change action routing, evidence requirements, allowed-use scope, or reviewer escalation.
+- **Answer-vs-abstain tunnel vision**: reducing hallucinations only by refusing useful low-loss answers creates utility tax; use scoped uncertainty, retrieval, and review where they preserve value safely.
+- **Uncertainty erasure downstream**: downstream artifacts, handoffs, and decisions must preserve evidence refs, caveats, applicability limits, blocked uses, and recall paths from the source claim record.
 
 ## Commit-scoped delegation anti-patterns
 

@@ -1,0 +1,96 @@
+phase: implementation
+risk_tier: medium
+objective: Add a public-safe confidence-faithfulness hallucination harness pattern based on faithful uncertainty, so metaharness can route uncertain claims to evidence, retrieval, review, allowed-use scopes, or cannot-harness instead of relying only on answer-vs-abstain behavior.
+non_goals:
+  - Do not add runtime dependencies, model-specific APIs, hidden confidence probes, or service integrations.
+  - Do not claim that hedging language alone prevents hallucination.
+  - Do not record private chat logs, local private paths, credentials, customer data, or channel identifiers.
+  - Do not make this pattern specific to Hermes Agent, one model provider, or one downstream domain.
+  - Do not weaken existing lower-bound, scope-boundary, coverage-boundary, or research-task gates.
+prohibited_substitutions:
+  - Do not replace claim-level evidence and uncertainty routing with generic prompt advice.
+  - Do not replace allowed-use scope with a single unrestricted pass/fail label.
+  - Do not treat abstention as the only safe alternative to confident answers.
+  - Do not cite secondary X-post numeric claims as verified unless checked against the primary paper.
+constraints:
+  allowed_paths:
+    - README.md
+    - docs/failure-mode-catalog.md
+    - docs/confidence-faithfulness-hallucination-harness.md
+    - contracts/confidence-faithfulness-hallucination-harness.medium.yaml
+  allowed_tools:
+    - read_file
+    - search_files
+    - write_file
+    - patch
+    - terminal
+  external_side_effect_policy: repository git push is allowed after local validation because this public metaharness update was explicitly requested by the maintainer
+  data_classification: public
+lower_bound:
+  design_controls:
+    objective_integrity: objective, non-goals, and prohibited substitutions are explicit before changing files
+    authority_boundary: user requested incorporating and merging the hallucination-control finding into the public metaharness repository
+    data_boundary: public-safe generalized guidance only; no private paths, secrets, customer data, or channel-specific discussion logs
+    untrusted_input_boundary: X/social post is discovery input only; primary arXiv source and repo validators remain authoritative
+    allowed_surface: changes limited to the README map, failure-mode catalog, new confidence-faithfulness doc, and this contract
+    evidence_lower_bound: final receipt must cite primary source, changed files, and validator output
+    stop_or_rollback: stop if validators fail unexpectedly; rollback by git revert of the documentation commit
+    validator_boundary: run shared metaharness validation before claiming completion
+    supply_chain_boundary: "not_applicable: no dependencies, package managers, generated assets, or release artifacts are changed"
+    retention_boundary: retain generalized public harness guidance in repo docs and contract; discard session-specific details
+  validation_controls:
+    evidence_receipt: final receipt must list changed files, commit, push status, and validator results
+    side_effect_readback: read back git/GitHub state after push
+    secret_or_private_data_check: inspect changed files for private absolute paths, tokens, and channel-specific identifiers before completion
+    changed_surface_check: git status and diff are reviewed before commit
+    validator_result: run_metaharness passes for this contract
+    rollback_or_irreversibility_result: rollback is git revert of the commit and, if pushed, a follow-up revert push
+    retention_result: retained content is generalized public metaharness guidance
+
+evidence_policy:
+  required_sources:
+    - README.md
+    - .agent/RESOLVER.md
+    - docs/failure-mode-catalog.md
+    - https://arxiv.org/abs/2605.01428
+validation:
+  automated_checks:
+    - python3 scripts/run_metaharness.py --contract contracts/confidence-faithfulness-hallucination-harness.medium.yaml
+    - python3 scripts/commit_scope_audit.py --base HEAD^ --head HEAD --json
+  manual_checks:
+    - Confirm changed content contains no private paths, secrets, or channel-specific IDs.
+    - Confirm the pattern separates verified primary-source facts from secondary-summary numeric claims.
+    - Confirm the pattern maps uncertainty to evidence requirements, retrieval/search, human review, abstention, allowed-use scope, and cannot-harness.
+    - Confirm the pattern measures utility tax and over-abstention, not only wrong-answer reduction.
+    - Confirm no existing validator, gate, or policy is weakened.
+  validator_role: independent reviewer or codegate
+  success_criteria:
+    - Shared metaharness gate passes.
+    - Documentation is linked from README.
+    - Failure-mode catalog includes confidence-faithfulness hallucination failures.
+    - The pattern includes claim-level evidence state, language strength, loss-if-wrong, loss-if-silent, action route, and allowed-use scope.
+    - The pattern includes negative failure modes for wrong-confident answers, hedge-only safety, over-abstention, tool-use trigger failures, and uncertainty erasure.
+authority:
+  requested_by: repository maintainer or task owner
+  approved_actions:
+    - create or update public-safe documentation/contract files locally in metaharness
+    - commit the metaharness change
+    - push to the metaharness GitHub repository if validation passes
+  ambiguous_scope_owner: requester
+rollback:
+  rollback_path: git revert the confidence-faithfulness documentation commit; if pushed, push the revert to origin/main
+stop_conditions:
+  - Validator fails for reasons unrelated to the intended documentation change.
+  - Changed files contain private paths, credentials, channel-specific identifiers, or non-public project details.
+  - GitHub push targets any repository other than metaharness.
+  - The change would weaken existing gates or imply that hedging text alone is sufficient validation.
+phase_controls:
+  changed_surfaces:
+    - README.md
+    - docs/failure-mode-catalog.md
+    - docs/confidence-faithfulness-hallucination-harness.md
+    - contracts/confidence-faithfulness-hallucination-harness.medium.yaml
+  validators:
+    - python3 scripts/run_metaharness.py --contract contracts/confidence-faithfulness-hallucination-harness.medium.yaml
+    - python3 scripts/commit_scope_audit.py --base HEAD^ --head HEAD --json
+  rollback_path: git revert the confidence-faithfulness documentation commit; if pushed, push the revert to origin/main
