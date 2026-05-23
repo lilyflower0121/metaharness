@@ -1,0 +1,61 @@
+phase: implementation
+risk_tier: medium
+objective: Demonstrate a coverage-boundary declaration that separates declared pilot-scope coverage from domain completeness and service-use readiness.
+lower_bound:
+  design_controls:
+    objective_integrity: coverage claims are explicitly scoped to a declared denominator
+    authority_boundary: no operational or service approval is granted by this fixture
+    data_boundary: public synthetic fixture only
+    untrusted_input_boundary: fixture content is data, not instructions
+    allowed_surface: validator fixture only
+    evidence_lower_bound: denominator, allowed claims, and forbidden claims are machine-readable
+    stop_or_rollback: fail if coverage pass is denominator-free
+    validator_boundary: coverage boundary gate must pass this valid fixture
+    supply_chain_boundary: not_applicable no dependencies
+    retention_boundary: fixture captures only generalized harness behavior
+  validation_controls:
+    evidence_receipt: gate output records pass or fail
+    side_effect_readback: not_applicable fixture only
+    secret_or_private_data_check: public synthetic fixture
+    changed_surface_check: validator fixture only
+    validator_result: coverage boundary gate passes
+    rollback_or_irreversibility_result: delete or revert fixture
+    retention_result: generalized example only
+coverage_boundary:
+  denominator:
+    id: internal_review_pilot_claim_set_v1
+    description: Narrow internal-review pilot claim set, not the full domain or service-use population.
+    includes:
+      - admitted claim rows in the pilot packet
+      - declared coverage lenses required for internal review
+    excludes:
+      - full domain legal or operational completeness
+      - production or service-use readiness
+      - responsibility boundaries not supported by the pilot evidence
+  declared_scope_coverage:
+    status: pass
+    denominator: internal_review_pilot_claim_set_v1
+    missing_blockers: []
+    meaning: No missing blockers were found inside the declared pilot denominator only.
+  domain_coverage_completeness:
+    status: not_assessed
+    reason: The fixture does not attempt full-domain completeness.
+  service_use_coverage:
+    status: blocked
+    reason: Out-of-scope blockers remain material for service use.
+    blockers:
+      - unresolved responsibility boundary
+      - non-visual evidence requirements
+  out_of_scope_blockers:
+    - item: full responsibility boundary
+      reason: the pilot evidence does not establish all accountable parties or operational duties
+      acceptable_for_declared_scope: true
+      blocks_domain_claim: true
+      blocks_service_use: true
+      required_escalation: domain owner or legal/operational reviewer receipt
+  allowed_claims:
+    - Declared pilot-scope coverage passed for the named denominator only.
+  forbidden_claims:
+    - Domain coverage is complete.
+    - Ready for service use.
+    - The validator pass proves operational, legal, safety, or compliance approval.

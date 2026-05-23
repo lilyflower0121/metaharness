@@ -71,6 +71,8 @@ def main() -> int:
         commands.append([sys.executable, "scripts/adoption_gate.py", "--contract", rel])
     if has_section(data, "scope_boundary"):
         commands.append([sys.executable, "scripts/scope_boundary_gate.py", "--contract", rel])
+    if has_section(data, "coverage_boundary"):
+        commands.append([sys.executable, "scripts/coverage_boundary_gate.py", "--contract", rel])
     for packet in activity_feedback_packets(data):
         commands.append([sys.executable, "scripts/activity_feedback_gate.py", "--packet", packet])
 

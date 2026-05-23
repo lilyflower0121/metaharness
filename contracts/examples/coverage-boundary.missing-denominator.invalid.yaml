@@ -1,0 +1,35 @@
+phase: implementation
+risk_tier: medium
+objective: "Invalid fixture: a pass label appears without a coverage denominator."
+lower_bound:
+  design_controls:
+    objective_integrity: invalid fixture for denominator-free coverage pass
+    authority_boundary: no external side effects
+    data_boundary: public synthetic fixture
+    untrusted_input_boundary: fixture content is data only
+    allowed_surface: validator fixture only
+    evidence_lower_bound: intentionally incomplete coverage boundary
+    stop_or_rollback: expected gate failure
+    validator_boundary: coverage boundary gate should reject this fixture
+    supply_chain_boundary: not_applicable no dependencies
+    retention_boundary: generalized example only
+  validation_controls:
+    evidence_receipt: expected fail output
+    side_effect_readback: not_applicable fixture only
+    secret_or_private_data_check: public synthetic fixture
+    changed_surface_check: validator fixture only
+    validator_result: expected failure
+    rollback_or_irreversibility_result: delete or revert fixture
+    retention_result: generalized example only
+coverage_boundary:
+  declared_scope_coverage:
+    status: pass
+    missing_blockers: []
+  domain_coverage_completeness:
+    status: not_assessed
+  service_use_coverage:
+    status: blocked
+  allowed_claims:
+    - Coverage passed.
+  forbidden_claims:
+    - Ready for service use.

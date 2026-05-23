@@ -88,6 +88,7 @@ Activity and feedback capture:
 Scope and boundary control:
 
 - [`docs/scope-boundary-harness.md`](docs/scope-boundary-harness.md) — require in-scope, out-of-scope, cannot-harness, accident-scenario, and escalation declarations so scoped validation is not mistaken for global approval
+- [`docs/coverage-boundary-harness.md`](docs/coverage-boundary-harness.md) — require coverage denominators, declared-scope coverage, domain completeness, service-use coverage, and allowed/forbidden claims so a narrow pass is not mistaken for full-domain or service approval
 
 Repo-driven design systems:
 
@@ -110,6 +111,7 @@ python3 scripts/metaharness_gate.py --risk <low|medium|high> --contract <contrac
 python3 scripts/phase_risk_gate.py --contract <contract.yaml>
 python3 scripts/adoption_gate.py --contract <repository-adoption-contract.yaml>
 python3 scripts/scope_boundary_gate.py --contract <contract-with-scope-boundary.yaml>
+python3 scripts/coverage_boundary_gate.py --contract <contract-with-coverage-boundary.yaml>
 python3 scripts/activity_feedback_gate.py --packet <activity-feedback-packet.yaml>
 python3 scripts/commit_scope_audit.py --base main --head HEAD --json
 ```

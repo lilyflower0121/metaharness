@@ -122,6 +122,8 @@ Freeze the intended use and the boundary before collecting evidence:
 - risk tier and required reviewers;
 - prohibited uses;
 - in-scope checks, out-of-scope adjacent work, and cannot-harness claims or actions;
+- coverage denominator when any coverage-like pass/fail label may be emitted;
+- declared-scope coverage, domain coverage completeness, and service-use coverage as separate decisions;
 - escalation triggers required before blocked uses can become allowed.
 
 ### Gate 1: Metric/loss-function fit

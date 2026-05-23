@@ -45,6 +45,7 @@ scope_boundary:
 - `cannot_harness` is stronger than out-of-scope: it names claims/actions that the current harness cannot verify even if the agent works harder inside the same scope.
 - If downstream use needs an out-of-scope or cannot-harness item, create a new contract with the missing authority, evidence, tools, reviewers, or operational telemetry.
 - Do not let a later renderer, report, PR, release note, or agent summary strip the boundary fields.
+- If a boundary result includes coverage-like language, pair this pattern with [`coverage-boundary-harness.md`](coverage-boundary-harness.md) so the receipt names the denominator and separates declared-scope coverage from domain completeness and service-use readiness.
 
 ## Gate sequence
 

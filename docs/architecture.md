@@ -20,6 +20,7 @@ The harness should prevent common autonomous-agent failures:
 - ungrounded assumptions
 - unsafe external side effects
 - scoped validation mistaken for global approval
+- denominator-free coverage pass mistaken for domain or service approval
 - executor self-certification
 - memory / rule bloat
 - unverifiable success claims
@@ -40,8 +41,9 @@ Required fields:
 - ambiguity owner
 - scope-change rule
 - scope boundary: in scope / out of scope / cannot harness / escalation triggers
+- coverage boundary: denominator / declared-scope coverage / domain completeness / service-use coverage
 
-The key invariant is that implementation convenience must not silently change the task. A second invariant is that a pass inside the contract must not be presented as approval outside the contract.
+The key invariant is that implementation convenience must not silently change the task. A second invariant is that a pass inside the contract must not be presented as approval outside the contract. A third invariant is that a coverage pass must carry its denominator so pilot-scope coverage cannot be laundered into domain-wide or service-use approval.
 
 ## Layer 2: Constraint & Policy Layer
 

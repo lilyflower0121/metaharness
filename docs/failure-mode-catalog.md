@@ -85,6 +85,7 @@ Lower-bound (LB) families:
 | FM-042 | Model inference promoted as requirement | mvp_exploration, specification, retention | medium+ | confirmation and validator-promotion gate |
 | FM-043 | Scope boundary blindness | all, especially research, delegation, merge, release | medium+ | scope-boundary and cannot-harness gate |
 | FM-044 | Scoped pass overclaim | validation, merge, release, operate | medium+ | receipt boundary preservation gate |
+| FM-045 | Coverage denominator blindness | validation, merge, release, operate | medium+ | coverage-boundary and receipt denominator gate |
 
 ## Agent development / delegation anti-patterns
 
@@ -113,6 +114,7 @@ These modes come from internal agent-development and delegation failure analysis
 - **Model inference promoted as requirement**: an agent can propose requirement deltas from traces, but confirmation or validator evidence is required before retention or implementation.
 - **Scope boundary blindness**: every task that may feed a broader workflow must name in-scope checks, out-of-scope adjacent work, cannot-harness claims/actions, and escalation triggers before a local pass can be reused.
 - **Scoped pass overclaim**: final receipts and downstream artifacts must preserve the boundary statement; a validator pass is scoped evidence, not production, legal, operational, safety, or compliance approval unless those checks were actually inside the contract.
+- **Coverage denominator blindness**: every coverage-like pass must name its denominator, separate declared-scope coverage from domain completeness and service-use coverage, and preserve allowed/forbidden claims in downstream receipts.
 
 ## Commit-scoped delegation anti-patterns
 
