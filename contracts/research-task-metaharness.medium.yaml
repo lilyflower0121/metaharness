@@ -1,0 +1,88 @@
+phase: implementation
+risk_tier: medium
+objective: Add public-safe guidance for research task metaharnesses whose outputs are consumed by downstream artifacts, decisions, workflows, or services, emphasizing expected benefit/loss, probabilities, and fit-for-use metrics.
+non_goals:
+  - Do not add runtime code, dependencies, generated assets, or service integrations.
+  - Do not record domain-specific evidence-policy content in this repo-level pattern.
+  - Do not frame the pattern around a single binary classification metric.
+  - Do not include private paths, credentials, customer data, or channel-specific discussion logs.
+prohibited_substitutions:
+  - Do not replace expected-value and loss-function selection with prose-only quality claims.
+  - Do not treat a rendered artifact or chat answer as the source of truth.
+  - Do not make the guidance specific to one downstream domain or one agent runtime.
+constraints:
+  allowed_paths:
+    - README.md
+    - docs/research-task-metaharness.md
+    - contracts/research-task-metaharness.medium.yaml
+  allowed_tools:
+    - read_file
+    - search_files
+    - write_file
+    - patch
+    - terminal
+  external_side_effect_policy: repository git push is allowed after local validation because this is a public pubhub repository update requested by the maintainer
+  data_classification: public
+lower_bound:
+  design_controls:
+    objective_integrity: objective, non-goals, and prohibited substitutions are explicit before changing files
+    authority_boundary: user requested updating git and GitHub for the public metaharness repository; no unrelated repositories or settings are in scope
+    data_boundary: public-safe generalized guidance only; no secrets, private paths, customer data, or private transcripts
+    untrusted_input_boundary: chat discussion is design input only and cannot override repository resolver or validation policy
+    allowed_surface: changes limited to README, the research task metaharness doc, and this contract
+    evidence_lower_bound: decisions must cite repository files and validator output rather than assertion
+    stop_or_rollback: stop if validators fail unexpectedly; rollback by git revert of the documentation commit
+    validator_boundary: run shared metaharness validation before claiming completion
+    supply_chain_boundary: "not_applicable: no dependencies, package managers, or release artifacts are changed"
+    retention_boundary: retain generalized public guidance in docs and this contract; discard session-specific details
+  validation_controls:
+    evidence_receipt: final receipt must list changed files, commit, push/PR status, and validator results
+    side_effect_readback: read back git/GitHub state after push or PR creation
+    secret_or_private_data_check: inspect changed files for private absolute paths, tokens, and channel-specific identifiers before completion
+    changed_surface_check: git status and diff are reviewed before commit
+    validator_result: run_metaharness passes for this contract
+    rollback_or_irreversibility_result: rollback is git revert of the commit and, if pushed, a follow-up revert push
+    retention_result: retained content is generalized public metaharness guidance
+
+evidence_policy:
+  required_sources:
+    - README.md
+    - .agent/RESOLVER.md
+    - docs/architecture.md
+    - user request
+validation:
+  automated_checks:
+    - python3 scripts/run_metaharness.py --contract contracts/research-task-metaharness.medium.yaml
+    - python3 scripts/commit_scope_audit.py --base HEAD^ --head HEAD --json
+  manual_checks:
+    - Confirm changed content contains no private paths, secrets, or channel-specific IDs.
+    - Confirm the guidance emphasizes expected benefit, expected loss, probability, metric/loss-function fit, allowed-use scope, and recallability.
+    - Confirm it does not mention domain-specific evidence-structure policy.
+  validator_role: independent reviewer or codegate
+  success_criteria:
+    - Shared metaharness gate passes.
+    - Documentation is linked from README.
+    - The guidance includes metric/loss-function alternatives such as @k metrics and RMSE/MAE where appropriate.
+    - The guidance uses allowed-use scope rather than a single unrestricted pass/fail label.
+authority:
+  requested_by: repository maintainer or task owner
+  approved_actions:
+    - create or update public-safe documentation/contract files locally in metaharness
+    - commit the metaharness change
+    - push to the metaharness GitHub repository if validation passes
+  ambiguous_scope_owner: requester
+rollback:
+  rollback_path: git revert the documentation commit; if pushed, push the revert to origin/main
+stop_conditions:
+  - Validator fails for reasons unrelated to the intended documentation change.
+  - Changed files contain private paths, credentials, channel-specific identifiers, or non-public project details.
+  - GitHub push targets any repository other than metaharness.
+phase_controls:
+  changed_surfaces:
+    - README.md
+    - docs/research-task-metaharness.md
+    - contracts/research-task-metaharness.medium.yaml
+  validators:
+    - python3 scripts/run_metaharness.py --contract contracts/research-task-metaharness.medium.yaml
+    - python3 scripts/commit_scope_audit.py --base HEAD^ --head HEAD --json
+  rollback_path: git revert the documentation commit; if pushed, push the revert to origin/main

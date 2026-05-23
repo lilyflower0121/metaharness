@@ -91,6 +91,10 @@ Repo-driven design systems:
 - [`docs/repo-driven-design-system-migration.md`](docs/repo-driven-design-system-migration.md) — migration pattern for retiring detached design-tool authority while keeping human-verifiable review surfaces
 - [`checklists/repo-driven-design-system-migration.md`](checklists/repo-driven-design-system-migration.md) — manual gate for token-to-flow migration, new UI proposals, PR evidence, and retirement decisions
 
+Research task metaharnesses:
+
+- [`docs/research-task-metaharness.md`](docs/research-task-metaharness.md) — expected-value harness pattern for research outputs that feed downstream artifacts, decisions, workflows, or services
+
 Each skill has its own `references/` and `scripts/` support files. Common artifact-building flows are managed by `artifact-build-flow-harness`; risk-specific strictness is added by the low/medium/high skills.
 
 Run the structural gates directly with:
